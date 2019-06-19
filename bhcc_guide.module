@@ -1,0 +1,59 @@
+<?php
+
+define('GUIDE_MASTER', 'guide_overview');
+define('GUIDE_SINGLETON', 'guide_page');
+
+/**
+ * Implements hook_theme().
+ */
+function bhcc_guide_theme($existing, $type, $theme, $path) {
+  return [
+    'guide_contents' => [
+      'variables' => [
+        'links' => []
+      ]
+    ]
+  ];
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function bhcc_guide_node_insert(\Drupal\Core\Entity\EntityInterface $entity) {
+  bhcc_guide_node_update($entity);
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update().
+ *
+ * When saving a guide singleton, we update the guide parent so it knows about
+ * the new page.
+ */
+function bhcc_guide_node_update(Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity instanceof \Drupal\bhcc_guide\Node\GuideSingleton) {
+    if ($parent = $entity->getParent()) {
+      $parent->addChild($entity);
+      $parent->save();
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_HOOK().
+ *
+ * Add extra fields to the guide pages.
+ */
+function bhcc_guide_preprocess_node(&$variables) {
+  $node = $variables['node'];
+
+  if ($variables['view_mode'] == 'full') {
+    if ($node instanceof \Drupal\bhcc_guide\Node\GuideMaster) {
+      $variables['next_url'] = $node->getNextGuideUrl();
+    }
+
+    if ($node instanceof \Drupal\bhcc_guide\Node\GuideSingleton) {
+      $variables['previous_url'] = $node->getPreviousGuideUrl();
+      $variables['next_url'] = $node->getNextGuideUrl();
+    }
+  }
+}

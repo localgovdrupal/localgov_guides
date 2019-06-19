@@ -1,0 +1,4 @@
+name: Guide
+description: Brighton and Hove City Council guide pages
+core: 8.x
+type: module

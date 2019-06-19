@@ -1,0 +1,27 @@
+
+<nav class="section cta-pull">
+
+  <h2>Contents</h2>
+  <div class="row">
+    {% if links|length <= 4 %}
+	  <div class="col-sm-6">
+        <ul>
+        {% for link in links %}
+          <li>{{ link }}</li>
+        {% endfor %}
+        </ul>
+      </div>
+    {% else %}
+
+      {% for batch in links|batch(2) %}
+	    <div class="col-sm-6">
+          <ul>
+            {% for link in batch %}
+              <li>{{ link }}</li>
+           {% endfor %}
+          </ul>
+		</div>
+      {% endfor %}
+    {% endif %}
+  </div>
+</nav>
