@@ -70,7 +70,7 @@ class LabelsWidget extends WidgetBase {
    */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     foreach ($values as $key => $value) {
-      if (is_array($value['target_id'])) {
+      if (array_key_exists('target_id', $value) && is_array($value['target_id'])) {
         unset($values[$key]['target_id']);
         $values[$key] += $value['target_id'];
       }
