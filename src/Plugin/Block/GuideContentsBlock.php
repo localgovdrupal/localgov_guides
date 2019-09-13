@@ -6,6 +6,8 @@ use Drupal\bhcc_helper\CurrentPage;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -64,7 +66,9 @@ class GuideContentsBlock extends BlockBase implements ContainerFactoryPluginInte
 
     $links = [];
     foreach ($this->node->listGuidePages() as $guide_node) {
-      $links[] = \Drupal\Core\Link::fromTextAndUrl($guide_node->getGuideSectionTitle(), \Drupal\Core\Url::fromRoute('entity.node.canonical', ['node' => $guide_node->id()]));
+      if ($guide_node->getGuideSectionTitle()) {
+        $links[] = Link::fromTextAndUrl($guide_node->getGuideSectionTitle(), Url::fromRoute('entity.node.canonical', ['node' => $guide_node->id()]));
+      }
     }
 
     $build[] = [
