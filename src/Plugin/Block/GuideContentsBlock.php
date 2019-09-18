@@ -76,6 +76,7 @@ class GuideContentsBlock extends BlockBase implements ContainerFactoryPluginInte
       '#links' => $links,
       '#cache' => [
         'tags' => $this->prepareCacheTags($this->node, ...$this->node->listGuidePages()),
+        'contexts' => ['url.path'],
       ],
     ];
 
