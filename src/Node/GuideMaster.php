@@ -30,6 +30,10 @@ class GuideMaster extends NodeBase {
    * @return string
    */
   public function getGuideSectionTitle() {
+    if (!$this->get('field_guide_section_title')->isEmpty()) {
+      return $this->get('field_guide_section_title')->first()->getValue()['value'];
+    }
+
     return 'Overview';
   }
 
@@ -111,6 +115,19 @@ class GuideMaster extends NodeBase {
    */
   public function listGuidePages() {
     return array_merge([$this], $this->getChildren());
+  }
+  
+  /**
+   * Returns list format
+   *
+   * @return mixed|string|null
+   */
+  public function getListFormat() {
+    if (!$this->get('field_list_format')->isEmpty()) {
+      return $this->get('field_list_format')->first()->getValue()['value'];
+    }
+
+    return false;    
   }
 
   /**

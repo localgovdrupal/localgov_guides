@@ -3,11 +3,8 @@
 namespace Drupal\bhcc_guide\Plugin\Block;
 
 use Drupal\bhcc_helper\CurrentPage;
-use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Block\BlockBase;
-use Drupal\Core\Link;
-use Drupal\Core\Url;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -62,38 +59,69 @@ class GuideContentsBlock extends BlockBase implements ContainerFactoryPluginInte
    * {@inheritdoc}
    */
   public function build() {
+
     $build = [];
 
-    $links = [];
-    foreach ($this->node->listGuidePages() as $guide_node) {
-      if ($guide_node->getGuideSectionTitle()) {
-        $links[] = Link::fromTextAndUrl($guide_node->getGuideSectionTitle(), Url::fromRoute('entity.node.canonical', ['node' => $guide_node->id()]));
-      }
+    // Get current node and store nid as variable currentNid
+    $currentNode = \Drupal::routeMatch()->getParameter('node');
+    if ($currentNode instanceof \Drupal\node\NodeInterface) {
+      $currentNid = $currentNode->id();
     }
+
+    $links = [];
+
+    foreach ($this->node->listGuidePages() as $guide_node) {
+      
+      // Get nid of each node in listGuidePages object
+      $guideNid = $guide_node->id();
+
+      // If the nid of the guide page matches nid of current page, add 'active' class
+      if ($guideNid == $currentNid) {
+        $links[] = \Drupal\Core\Link::fromTextAndUrl(
+          $guide_node->getGuideSectionTitle(), 
+          \Drupal\Core\Url::fromRoute(
+            'entity.node.canonical', 
+            ['node' => $guideNid],
+            ['attributes' => ['class' => 'active']]
+          )
+        );
+      } 
+
+      // Otherwise add without classes
+      else {
+        $links[] = \Drupal\Core\Link::fromTextAndUrl(
+          $guide_node->getGuideSectionTitle(), 
+          \Drupal\Core\Url::fromRoute(
+            'entity.node.canonical', 
+            ['node' => $guideNid]
+          )
+        );
+      }
+
+    }
+
+    $format = $this->node->getListFormat();
 
     $build[] = [
       '#theme' => 'guide_contents',
       '#links' => $links,
-      '#cache' => [
-        'tags' => $this->prepareCacheTags($this->node, ...$this->node->listGuidePages()),
-        'contexts' => ['url.path'],
-      ],
+      '#format' => $format
     ];
 
     return $build;
   }
 
   /**
-   * Prepare cache tags for the given items.
+   * {@inheritdoc}
    */
-  protected function prepareCacheTags(CacheableDependencyInterface ...$cacheable_items): array {
-
-    $list_of_tag_collections = array_map(function ($cacheable_item) {
-      return $cacheable_item->getCacheTags();
-    }, $cacheable_items);
-
-    $merged_tags = array_reduce($list_of_tag_collections, [Cache::class, 'mergeTags'], $initial = []);
-    return $merged_tags;
+  public function getCacheContexts() {
+    return Cache::mergeContexts(parent::getCacheContexts(), ['route']);
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getCacheTags() {
+    return Cache::mergeTags(parent::getCacheTags(), ['node:' . $this->node->id()]);
+  }
 }

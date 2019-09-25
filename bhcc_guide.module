@@ -10,7 +10,8 @@ function bhcc_guide_theme($existing, $type, $theme, $path) {
   return [
     'guide_contents' => [
       'variables' => [
-        'links' => []
+        'links' => [],
+        'format' => []
       ]
     ]
   ];

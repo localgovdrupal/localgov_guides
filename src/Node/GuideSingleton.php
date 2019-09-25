@@ -24,6 +24,7 @@ class GuideSingleton extends NodeBase {
     return $this->getParent()->getPageTitle();
   }
 
+
   /**
    * We inherit the parents description.
    *
@@ -31,6 +32,19 @@ class GuideSingleton extends NodeBase {
    */
   public function getPageDescription() {
     return $this->getParent()->getPageDescription();
+  }
+
+  /**
+   * We inherit the parents list format.
+   *
+   * @return mixed|string|null
+   */
+  public function getListFormat() {
+    if (!$this->getParent()->get('field_list_format')->isEmpty() ) {
+      return $this->getParent()->get('field_list_format')->first()->getValue()['value'];
+    }
+    
+    return false;
   }
 
   /**
