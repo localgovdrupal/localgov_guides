@@ -5,6 +5,7 @@ namespace Drupal\bhcc_guide\Plugin\Block;
 use Drupal\bhcc_helper\CurrentPage;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -122,6 +123,26 @@ class GuideContentsBlock extends BlockBase implements ContainerFactoryPluginInte
    * {@inheritdoc}
    */
   public function getCacheTags() {
-    return Cache::mergeTags(parent::getCacheTags(), ['node:' . $this->node->id()]);
+
+    $guide_pages_cache_tags = $this->prepareCacheTags($this->node->listGuidePages());
+
+    return Cache::mergeTags(parent::getCacheTags(), $guide_pages_cache_tags);
   }
+
+  /**
+   * Prepare cache tags for the given items.
+   *
+   * @param array $cacheable_items
+   *   Array of Drupal\Core\Cache\CacheableDependencyInterface objects.
+   */
+  protected function prepareCacheTags(array $cacheable_items): array {
+
+    $list_of_tag_collections = array_map(function (CacheableDependencyInterface $cacheable_item): array {
+      return $cacheable_item->getCacheTags();
+    }, $cacheable_items);
+
+    $merged_tags = array_reduce($list_of_tag_collections, [Cache::class, 'mergeTags'], $initial = []);
+    return $merged_tags;
+  }
+
 }
