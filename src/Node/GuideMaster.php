@@ -61,7 +61,8 @@ class GuideMaster extends NodeBase {
       $children[] = Node::load($page['target_id']);
     }
 
-    return $children;
+    $existing_children = array_filter($children);
+    return $existing_children;
   }
 
   /**
