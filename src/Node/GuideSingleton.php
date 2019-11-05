@@ -40,8 +40,11 @@ class GuideSingleton extends NodeBase {
    * @return mixed|string|null
    */
   public function getListFormat() {
-    if (!$this->getParent()->get('field_list_format')->isEmpty() ) {
-      return $this->getParent()->get('field_list_format')->first()->getValue()['value'];
+
+    $has_parent = $this->getParent();
+    $has_list_format = $has_parent and !$this->getParent()->get('field_list_format')->isEmpty();
+    if ($has_list_format) {
+      return $this->getParent()->get('field_list_format')->value;
     }
     
     return false;
@@ -101,8 +104,8 @@ class GuideSingleton extends NodeBase {
    *
    * @return array
    */
-  public function listGuidePages() {
-    return $this->getParent()->listGuidePages();
+  public function listGuidePages(): array {
+    return $this->getParent() ? $this->getParent()->listGuidePages() : [];
   }
 
   /**

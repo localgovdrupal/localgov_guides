@@ -58,11 +58,15 @@ class GuideMaster extends NodeBase {
   public function getChildren() {
     $children = [];
     foreach ($this->get('field_guide_pages')->getValue() as $page) {
-      $children[] = Node::load($page['target_id']);
+      $childNode = Node::load($page['target_id']);
+
+      // Only add to returned children if node, sometimes target_id might point to a deleted node
+      if (!empty($childNode)) {
+        $children[] = $childNode;
+      }
     }
 
-    $existing_children = array_filter($children);
-    return $existing_children;
+    return $children;
   }
 
   /**
@@ -117,7 +121,7 @@ class GuideMaster extends NodeBase {
   public function listGuidePages() {
     return array_merge([$this], $this->getChildren());
   }
-  
+
   /**
    * Returns list format
    *
@@ -128,7 +132,7 @@ class GuideMaster extends NodeBase {
       return $this->get('field_list_format')->first()->getValue()['value'];
     }
 
-    return false;    
+    return false;
   }
 
   /**
