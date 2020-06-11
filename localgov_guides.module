@@ -6,7 +6,7 @@ define('GUIDE_SINGLETON', 'guide_page');
 /**
  * Implements hook_theme().
  */
-function bhcc_guide_theme($existing, $type, $theme, $path) {
+function localgov_guides_theme($existing, $type, $theme, $path) {
   return [
     'guide_contents' => [
       'variables' => [
@@ -20,8 +20,8 @@ function bhcc_guide_theme($existing, $type, $theme, $path) {
 /**
  * Implements hook_ENTITY_TYPE_insert().
  */
-function bhcc_guide_node_insert(\Drupal\Core\Entity\EntityInterface $entity) {
-  bhcc_guide_node_update($entity);
+function localgov_guides_node_insert(\Drupal\Core\Entity\EntityInterface $entity) {
+  localgov_guides_node_update($entity);
 }
 
 /**
@@ -30,8 +30,8 @@ function bhcc_guide_node_insert(\Drupal\Core\Entity\EntityInterface $entity) {
  * When saving a guide singleton, we update the guide parent so it knows about
  * the new page.
  */
-function bhcc_guide_node_update(Drupal\Core\Entity\EntityInterface $entity) {
-  if ($entity instanceof \Drupal\bhcc_guide\Node\GuideSingleton) {
+function localgov_guides_node_update(Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity instanceof \Drupal\localgov_guides\Node\GuideSingleton) {
     if ($parent = $entity->getParent()) {
       $parent->addChild($entity);
       $parent->save();
@@ -44,15 +44,15 @@ function bhcc_guide_node_update(Drupal\Core\Entity\EntityInterface $entity) {
  *
  * Add extra fields to the guide pages.
  */
-function bhcc_guide_preprocess_node(&$variables) {
+function localgov_guides_preprocess_node(&$variables) {
   $node = $variables['node'];
 
   if ($variables['view_mode'] == 'full') {
-    if ($node instanceof \Drupal\bhcc_guide\Node\GuideMaster) {
+    if ($node instanceof \Drupal\localgov_guides\Node\GuideMaster) {
       $variables['next_url'] = $node->getNextGuideUrl();
     }
 
-    if ($node instanceof \Drupal\bhcc_guide\Node\GuideSingleton) {
+    if ($node instanceof \Drupal\localgov_guides\Node\GuideSingleton) {
       $variables['previous_url'] = $node->getPreviousGuideUrl();
       $variables['next_url'] = $node->getNextGuideUrl();
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\bhcc_guide\Plugin\Block;
+namespace Drupal\localgov_guides\Plugin\Block;
 
 use Drupal\bhcc_helper\CurrentPage;
 use Drupal\Core\Block\BlockBase;
@@ -12,10 +12,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Class GuideContentsBlock
  *
- * @package Drupal\bhcc_guide\Plugin\Block
+ * @package Drupal\localgov_guides\Plugin\Block
  *
  * @Block(
- *   id = "bhcc_guide_contents",
+ *   id = "localgov_guides_contents",
  *   admin_label = "Guide contents"
  * )
  */
@@ -32,7 +32,7 @@ class GuideContentsBlock extends BlockBase implements ContainerFactoryPluginInte
    * @param string $plugin_id
    * @param mixed $plugin_definition
    *
-   * @return \Drupal\bhcc_guide\Plugin\Block\GuideContentsBlock|\Drupal\Core\Plugin\ContainerFactoryPluginInterface
+   * @return \Drupal\localgov_guides\Plugin\Block\GuideContentsBlock|\Drupal\Core\Plugin\ContainerFactoryPluginInterface
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(

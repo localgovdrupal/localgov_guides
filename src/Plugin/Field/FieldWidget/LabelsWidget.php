@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\bhcc_guide\Plugin\Field\FieldWidget;
+namespace Drupal\localgov_guides\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
@@ -13,7 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
  * cases where the entities are added to this field from elsewhere but the
  * delta/weight is still configurable.
  *
- * @package Drupal\bhcc_guide\Field\FieldWidget
+ * @package Drupal\localgov_guides\Field\FieldWidget
  *
  * @FieldWidget(
  *   id = "entity_reference_labels",

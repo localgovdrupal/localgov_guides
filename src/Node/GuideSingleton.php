@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\bhcc_guide\Node;
+namespace Drupal\localgov_guides\Node;
 
 use Drupal\bhcc_helper\Node\NodeBase;
 use Drupal\bhcc_service_info\RelatedLinksInterface;
@@ -11,7 +11,7 @@ use Drupal\node\Entity\Node;
 /**
  * Class GuideSingleton
  *
- * @package Drupal\bhcc_guide\Node
+ * @package Drupal\localgov_guides\Node
  */
 class GuideSingleton extends NodeBase {
 
@@ -80,7 +80,7 @@ class GuideSingleton extends NodeBase {
   /**
    * Fetch the guide master node.
    *
-   * @return \Drupal\bhcc_guide\Node\GuideMaster|bool
+   * @return \Drupal\localgov_guides\Node\GuideMaster|bool
    */
   public function getParent() {
     try {

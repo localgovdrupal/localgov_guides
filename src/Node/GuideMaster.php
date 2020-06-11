@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\bhcc_guide\Node;
+namespace Drupal\localgov_guides\Node;
 
 use Drupal\bhcc_helper\Node\NodeBase;
 use Drupal\bhcc_service_info\RelatedLinksInterface;
@@ -10,7 +10,7 @@ use Drupal\node\Entity\Node;
 /**
  * Class GuideMaster
  *
- * @package Drupal\bhcc_guide\Node
+ * @package Drupal\localgov_guides\Node
  */
 class GuideMaster extends NodeBase {
 
@@ -72,7 +72,7 @@ class GuideMaster extends NodeBase {
   /**
    * Add a new child page.
    *
-   * @param \Drupal\bhcc_guide\Node\GuideSingleton $child
+   * @param \Drupal\localgov_guides\Node\GuideSingleton $child
    *
    * @return $this
    */
@@ -87,7 +87,7 @@ class GuideMaster extends NodeBase {
   /**
    * Check if the guide already contains a page.
    *
-   * @param \Drupal\bhcc_guide\Node\GuideSingleton $child
+   * @param \Drupal\localgov_guides\Node\GuideSingleton $child
    *
    * @return bool
    */

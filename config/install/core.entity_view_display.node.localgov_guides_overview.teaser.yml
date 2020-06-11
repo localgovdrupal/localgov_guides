@@ -1,0 +1,34 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.localgov_guides_overview.body
+    - field.field.node.localgov_guides_overview.localgov_guides_description
+    - field.field.node.localgov_guides_overview.localgov_guides_pages
+    - field.field.node.localgov_guides_overview.localgov_guides_section_title
+    - field.field.node.localgov_guides_overview.localgov_guides_list_format
+    - node.type.localgov_guides_overview
+  module:
+    - text
+    - user
+id: node.localgov_guides_overview.teaser
+targetEntityType: node
+bundle: localgov_guides_overview
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 0
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+hidden:
+  localgov_guides_description: true
+  localgov_guides_pages: true
+  localgov_guides_section_title: true
+  localgov_guides_list_format: true
+  links: true
+  search_api_excerpt: true
