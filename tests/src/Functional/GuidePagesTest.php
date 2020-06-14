@@ -2,15 +2,14 @@
 
 namespace Drupal\Tests\localgov_guides\Functional;
 
-use Drupal\node\NodeInterface;
 use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 
 /**
- * Tests localgov services pages working together, and with external modules.
+ * Tests localgov guide pages working together.
  *
- * @group media_counter
+ * @group localgov_guides
  */
 class GuidePagesTest extends BrowserTestBase {
 
