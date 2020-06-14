@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
+
 define('GUIDE_MASTER', 'guide_overview');
 define('GUIDE_SINGLETON', 'guide_page');
 
@@ -55,6 +57,64 @@ function localgov_guides_preprocess_node(&$variables) {
     if ($node instanceof \Drupal\localgov_guides\Node\GuideSingleton) {
       $variables['previous_url'] = $node->getPreviousGuideUrl();
       $variables['next_url'] = $node->getNextGuideUrl();
+    }
+  }
+}
+
+/**
+ * Implements hook_modules_installed().
+ */
+function localgov_guides_modules_installed($modules) {
+  $services = in_array('localgov_services_navigation', $modules);
+  $topics = in_array('localgov_topics', $modules);
+  if ($services || $topics) {
+    \Drupal::service('config.installer')->installOptionalConfig();
+    localgov_guides_optional_fields_settings($services, $topics);
+  }
+}
+
+/**
+ * Set form settings for optional services and topic fields on installation.
+ *
+ * @param bool $services
+ *   If localgov_services is (being) installed.
+ * @param bool $topics
+ *   If localgov_topics is (being) installed.
+ */
+function localgov_guides_optional_fields_settings($services, $topics) {
+  $properties = [
+    'targetEntityType' => 'node',
+    'bundle' => 'localgov_guides_overview',
+  ];
+  if ($form_displays = \Drupal::entityTypeManager()->getStorage('entity_form_display')->loadByProperties($properties)) {
+    foreach ($form_displays as $form_display) {
+      assert($form_display instanceof EntityFormDisplayInterface);
+      if ($services && !$form_display->getComponent('localgov_services_parent')) {
+        $form_display->setComponent('localgov_services_parent', [
+          'type' => 'entity_reference_autocomplete',
+          'region' => 'content',
+          'settings' => [
+            'match_operator' => 'CONTAINS',
+            'size' => '60',
+            'placeholder' => '',
+            'match_limit' => 10,
+          ],
+          'weight' => 51,
+        ])->save();
+      }
+      if ($topics && !$form_display->getComponent('localgov_topics')) {
+        $form_display->setComponent('field_topic_term', [
+          'type' => 'entity_reference_autocomplete',
+          'region' => 'content',
+          'settings' => [
+            'match_operator' => 'CONTAINS',
+            'size' => '60',
+            'placeholder' => '',
+            'match_limit' => 10,
+          ],
+          'weight' => 50,
+        ])->save();
+      }
     }
   }
 }

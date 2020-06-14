@@ -1,0 +1,15 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the LocalGov Guides module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function localgov_guides_install() {
+  $services = \Drupal::moduleHandler()->moduleExists('localgov_services_navigation');
+  $topics = \Drupal::moduleHandler()->moduleExists('localgov_topics');
+  localgov_guides_optional_fields_settings($services, $topics);
+}
