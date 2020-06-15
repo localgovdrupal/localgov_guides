@@ -74,7 +74,7 @@ class GuidePagesTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('List format');
 
     $this->drupalGet('/admin/structure/types/manage/localgov_guides_page/fields');
-    $this->assertSession()->pageTextContains('Guide homepage');
+    $this->assertSession()->pageTextContains('Guide overview');
     $this->assertSession()->pageTextContains('Guide section title');
   }
 

@@ -9,7 +9,7 @@ id: node.localgov_guides_page.localgov_guides_parent
 field_name: localgov_guides_parent
 entity_type: node
 bundle: localgov_guides_page
-label: 'Guide homepage'
+label: 'Guide overview'
 description: ''
 required: true
 translatable: false

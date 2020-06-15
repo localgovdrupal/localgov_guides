@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies: { }
 third_party_settings: { }
-name: 'Guide homepage'
+name: 'Guide overview'
 type: localgov_guides_overview
 description: ''
 help: ''
