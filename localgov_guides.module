@@ -1,9 +1,12 @@
 <?php
 
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
+use Drupal\node\NodeInterface;
 
-define('GUIDE_MASTER', 'guide_overview');
-define('GUIDE_SINGLETON', 'guide_page');
+/**
+ * @file
+ * Localgov Guides module hooks.
+ */
 
 /**
  * Implements hook_theme().
@@ -13,30 +16,31 @@ function localgov_guides_theme($existing, $type, $theme, $path) {
     'guide_contents' => [
       'variables' => [
         'links' => [],
-        'format' => []
-      ]
-    ]
+        'format' => [],
+      ],
+    ],
   ];
 }
 
 /**
  * Implements hook_ENTITY_TYPE_insert().
  */
-function localgov_guides_node_insert(\Drupal\Core\Entity\EntityInterface $entity) {
-  localgov_guides_node_update($entity);
+function localgov_guides_node_insert(NodeInterface $node) {
+  localgov_guides_node_update($node);
 }
 
 /**
  * Implements hook_ENTITY_TYPE_update().
  *
- * When saving a guide singleton, we update the guide parent so it knows about
- * the new page.
+ * Implements reference back on overview to page when pages are created.
  */
-function localgov_guides_node_update(Drupal\Core\Entity\EntityInterface $entity) {
-  if ($entity instanceof \Drupal\localgov_guides\Node\GuideSingleton) {
-    if ($parent = $entity->getParent()) {
-      $parent->addChild($entity);
-      $parent->save();
+function localgov_guides_node_update(NodeInterface $node) {
+  if ($node->bundle() == 'localgov_guides_page') {
+    if ($parent = $node->localgov_guides_parent->entity) {
+      if (array_search(['target_id' => $node->id()], $parent->localgov_guides_pages->getValue()) === FALSE) {
+        $parent->localgov_guides_pages->appendItem(['target_id' => $node->id()]);
+        $parent->save();
+      }
     }
   }
 }
@@ -48,15 +52,24 @@ function localgov_guides_node_update(Drupal\Core\Entity\EntityInterface $entity)
  */
 function localgov_guides_preprocess_node(&$variables) {
   $node = $variables['node'];
+  assert($node instanceof NodeInterface);
 
-  if ($variables['view_mode'] == 'full') {
-    if ($node instanceof \Drupal\localgov_guides\Node\GuideMaster) {
-      $variables['next_url'] = $node->getNextGuideUrl();
+  if ($node->bundle() == 'localgov_guides_overview') {
+    $variables['next_url'] = '';
+    if (!empty($node->localgov_guides_pages->entity)) {
+      $variables['next_url'] = $node->localgov_guides_pages->entity->toUrl();
     }
+  }
 
-    if ($node instanceof \Drupal\localgov_guides\Node\GuideSingleton) {
-      $variables['previous_url'] = $node->getPreviousGuideUrl();
-      $variables['next_url'] = $node->getNextGuideUrl();
+  if ($node->bundle() == 'localgov_guides_page') {
+    $variables['next_url'] = '';
+    $variables['previous_url'] = '';
+    if ($parent = $node->localgov_guides_parent->entity) {
+      if (!empty($parent->localgov_guides_pages)) {
+        $page_delta = array_search(['target_id' => $node->id()], $parent->localgov_guides_pages->getValue());
+        $variables['previous_url'] = !empty($parent->localgov_guides_pages[$page_delta - 1]->entity) ? $parent->localgov_guides_pages[$page_delta - 1]->entity->toUrl() : '';
+        $variables['next_url'] = !empty($parent->localgov_guides_pages[$page_delta + 1]->entity) ? $parent->localgov_guides_pages[$page_delta + 1]->entity->toUrl() : '';
+      }
     }
   }
 }

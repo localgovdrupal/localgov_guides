@@ -7,7 +7,7 @@ use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class LabelsWidget
+ * Guide Overview Pages Labels Widget.
  *
  * Display the entity references without an autocomplete field. This is used in
  * cases where the entities are added to this field from elsewhere but the
@@ -32,7 +32,7 @@ class LabelsWidget extends WidgetBase {
     $elements = parent::formMultipleElements($items, $form, $form_state);
 
     // Remove the add more link.
-    if (key_exists('add_more', $elements)) {
+    if (array_key_exists('add_more', $elements)) {
       unset($elements['add_more']);
     }
 
@@ -62,7 +62,7 @@ class LabelsWidget extends WidgetBase {
       return $element;
     }
 
-    return false;
+    return FALSE;
   }
 
   /**
@@ -78,4 +78,5 @@ class LabelsWidget extends WidgetBase {
 
     return $values;
   }
+
 }

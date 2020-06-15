@@ -2,15 +2,19 @@
 
 namespace Drupal\localgov_guides\Plugin\Block;
 
-use Drupal\bhcc_helper\CurrentPage;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Routing\CurrentRouteMatch;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\node\NodeInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class GuideContentsBlock
+ * Guide contents block.
  *
  * @package Drupal\localgov_guides\Plugin\Block
  *
@@ -22,94 +26,119 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class GuideContentsBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * @var bool|\Drupal\node\Entity\Node
+   * Guide overview node.
+   *
+   * @var \Drupal\node\NodeInterface
    */
-  protected $node;
+  protected $overview;
 
   /**
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   * @param array $configuration
-   * @param string $plugin_id
-   * @param mixed $plugin_definition
+   * Array of guide page nodes.
    *
-   * @return \Drupal\localgov_guides\Plugin\Block\GuideContentsBlock|\Drupal\Core\Plugin\ContainerFactoryPluginInterface
+   * @var \Drupal\node\NodeInterface[]
+   */
+  protected $guidePages;
+
+  /**
+   * List format.
+   *
+   * @var string
+   */
+  protected $format;
+
+  /**
+   * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     return new static(
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('bhcc_helper.current_page')
+      $container->get('current_route_match'),
+      $container->get('entity_type.manager')
     );
   }
 
   /**
-   * GuideContentsBlock constructor.
+   * Initialise new content block instance.
    *
    * @param array $configuration
-   * @param $plugin_id
-   * @param $plugin_definition
-   * @param \Drupal\bhcc_helper\CurrentPage $currentPage
+   *   The plugin configuration.
+   * @param string $plugin_id
+   *   The plugin_id for the plugin instance.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Routing\CurrentRouteMatch $route_match
+   *   The route match service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, CurrentPage $currentPage) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, CurrentRouteMatch $route_match, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->node = $currentPage->getNode();
+
+    $this->routeMatch = $route_match;
+    $this->entityTypeManager = $entity_type_manager;
+    if ($this->routeMatch->getParameter('node')) {
+      $this->node = $this->routeMatch->getParameter('node');
+      if (!$this->node instanceof NodeInterface) {
+        $node_storage = $this->entityTypeManager->getStorage('node');
+        $this->node = $node_storage->load($this->node);
+      }
+    }
+
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function blockAccess(AccountInterface $account) {
+    if ($this->node && (
+      ($this->node->bundle() == 'localgov_guides_overview' && !empty($this->node->localgov_guides_pages)) ||
+      ($this->node->bundle() == 'localgov_guides_page' && !empty($this->node->localgov_guides_parent)&& !empty($this->node->localgov_guides_parent->entity))
+    )) {
+      return AccessResult::allowed();
+    }
+    return AccessResult::neutral();
   }
 
   /**
    * {@inheritdoc}
    */
   public function build() {
-
-    $build = [];
-
-    // Get current node and store nid as variable currentNid
-    $currentNode = \Drupal::routeMatch()->getParameter('node');
-    if ($currentNode instanceof \Drupal\node\NodeInterface) {
-      $currentNid = $currentNode->id();
-    }
+    $this->setPages();
 
     $links = [];
-
-    foreach ($this->node->listGuidePages() as $guide_node) {
-      
-      // Get nid of each node in listGuidePages object
-      $guideNid = $guide_node->id();
-
-      // If the nid of the guide page matches nid of current page, add 'active' class
-      if ($guideNid == $currentNid) {
-        $links[] = \Drupal\Core\Link::fromTextAndUrl(
-          $guide_node->getGuideSectionTitle(), 
-          \Drupal\Core\Url::fromRoute(
-            'entity.node.canonical', 
-            ['node' => $guideNid],
-            ['attributes' => ['class' => 'active']]
-          )
-        );
-      } 
-
-      // Otherwise add without classes
-      else {
-        $links[] = \Drupal\Core\Link::fromTextAndUrl(
-          $guide_node->getGuideSectionTitle(), 
-          \Drupal\Core\Url::fromRoute(
-            'entity.node.canonical', 
-            ['node' => $guideNid]
-          )
-        );
-      }
-
+    foreach ($this->guidePages as $guide_node) {
+      assert($guide_node instanceof NodeInterface);
+      $options = $this->node->id() == $guide_node->id() ? ['attributes' => ['class' => 'active']] : [];
+      $links[] = $guide_node->toLink($guide_node->localgov_guides_section_title->value, 'canonical', $options);
     }
 
-    $format = $this->node->getListFormat();
-
+    $build = [];
     $build[] = [
       '#theme' => 'guide_contents',
       '#links' => $links,
-      '#format' => $format
+      '#format' => $this->format,
     ];
 
     return $build;
+  }
+
+  /**
+   * Set block list of pages and format to display.
+   */
+  protected function setPages() {
+    if (is_null($this->guidePages)) {
+      if ($this->node->bundle() == 'localgov_guides_overview') {
+        $this->overview = $this->node;
+      }
+      else {
+        $this->overview = $this->node->localgov_guides_parent->entity;
+      }
+
+      $this->guidePages = $this->overview->localgov_guides_pages->referencedEntities();
+      $this->format = $this->overview->localgov_guides_list_format->value;
+    }
   }
 
   /**
@@ -123,9 +152,8 @@ class GuideContentsBlock extends BlockBase implements ContainerFactoryPluginInte
    * {@inheritdoc}
    */
   public function getCacheTags() {
-
-    $guide_pages_cache_tags = $this->prepareCacheTags($this->node->listGuidePages());
-
+    $this->setPages();
+    $guide_pages_cache_tags = $this->prepareCacheTags(array_merge([$this->overview], $this->guidePages));
     return Cache::mergeTags(parent::getCacheTags(), $guide_pages_cache_tags);
   }
 
