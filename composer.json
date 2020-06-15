@@ -10,6 +10,7 @@
   },
   "require-dev": {
     "localgovdrupal/localgov_services": "dev-master",
-    "localgovdrupal/localgov_topics": "dev-master"
+    "localgovdrupal/localgov_topics": "dev-master",
+    "drupal/pathauto": "^1.6"
   }
 }

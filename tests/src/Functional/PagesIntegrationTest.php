@@ -10,7 +10,7 @@ use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
 
 /**
- * Tests localgov guide pages working together with services and topics.
+ * Tests pages working together with pathauto, services and topics.
  *
  * @group localgov_guides
  */
@@ -113,6 +113,29 @@ class PagesIntegrationTest extends BrowserTestBase {
     $trail = ['' => 'Home'];
     $trail += ['landing-page-1' => 'Landing Page 1'];
     $trail += ['landing-page-1/sublanding-1' => 'Sublanding 1'];
+    $this->assertBreadcrumb(NULL, $trail);
+  }
+
+  /**
+   * Pathauto and breadcrumbs.
+   */
+  public function testPagePath() {
+    $overview = $this->createNode([
+      'title' => 'Overview 1',
+      'type' => 'localgov_guides_overview',
+      'status' => NodeInterface::PUBLISHED,
+    ]);
+    $this->createNode([
+      'title' => 'Page 1',
+      'type' => 'localgov_guides_page',
+      'status' => NodeInterface::PUBLISHED,
+      'localgov_guides_parent' => ['target_id' => $overview->id()],
+    ]);
+
+    $this->drupalGet('overview-1/page-1');
+    $this->assertText('Page 1');
+    $trail = ['' => 'Home'];
+    $trail += ['overview-1' => 'Overview 1'];
     $this->assertBreadcrumb(NULL, $trail);
   }
 
