@@ -1,12 +1,12 @@
 <?php
 
-use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
-use Drupal\node\NodeInterface;
-
 /**
  * @file
  * Localgov Guides module hooks.
  */
+
+use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * Implements hook_theme().

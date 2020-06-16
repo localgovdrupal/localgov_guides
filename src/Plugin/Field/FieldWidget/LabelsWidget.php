@@ -50,7 +50,7 @@ class LabelsWidget extends WidgetBase {
       // Set target id as a hidden field so we can save the order.
       $element['target_id'] = [
         '#type' => 'hidden',
-        '#default_value' => $items[$delta]->getValue()['target_id']
+        '#default_value' => $items[$delta]->getValue()['target_id'],
       ];
 
       return $element;

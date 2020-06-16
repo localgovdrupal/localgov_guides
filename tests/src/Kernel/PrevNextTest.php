@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\localgov_guides\Kernel;
 
-use Drupal\Core\Url;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\node\Entity\Node;
 
@@ -76,7 +75,7 @@ class PrevNextTest extends KernelTestBase {
     $this->assertEmpty($variables['next_url']);
     $this->assertEmpty($variables['previous_url']);
 
-    // Overview - two pages. 
+    // Overview - two pages.
     $pages[1] = Node::create([
       'title' => 'Page 2',
       'type' => 'localgov_guides_page',
@@ -130,33 +129,30 @@ class PrevNextTest extends KernelTestBase {
     $this->assertEmpty($variables['next_url']);
     $this->assertEqual($variables['previous_url']->toString(), $pages[1]->toUrl()->toString());
 
-    /**
-     * Following test will fail because of reliance on deltas:
-     * https://github.com/localgovdrupal/localgov_guides/issues/6#issuecomment-644155487
-     *
-     *
-    // Delete page 1.
-    $pages[0]->delete();
-    drupal_flush_all_caches();
-    // Overview - next link new first page 2.
-    $overview = Node::load($overview->id());
-    $variables = ['node' => $overview];
-    localgov_guides_preprocess_node($variables);
-    $this->assertEqual($variables['next_url']->toString(), $pages[1]->toUrl()->toString());
-    // Page 2 - link to page 3.
-    $pages[1] = Node::load($pages[1]->id());
-    $variables = ['node' => $pages[1]];
-    localgov_guides_preprocess_node($variables);
-    $this->assertEqual($variables['next_url']->toString(), $pages[2]->toUrl()->toString());
-    $this->assertEmpty($variables['previous_url']);
-    // Page 3 - previous link to page 2.
-    $pages[2] = Node::load($pages[2]->id());
-    $variables = ['node' => $pages[2]];
-    localgov_guides_preprocess_node($variables);
-    $this->assertEmpty($variables['next_url']);
-    $this->assertEqual($variables['previous_url']->toString(), $pages[1]->toUrl()->toString());
-     *
-     */
+    // Following test will fail because of reliance on deltas:
+    // https://github.com/localgovdrupal/localgov_guides/issues/6#issuecomment-644155487
+    if (FALSE) {
+      // Delete page 1.
+      $pages[0]->delete();
+      drupal_flush_all_caches();
+      // Overview - next link new first page 2.
+      $overview = Node::load($overview->id());
+      $variables = ['node' => $overview];
+      localgov_guides_preprocess_node($variables);
+      $this->assertEqual($variables['next_url']->toString(), $pages[1]->toUrl()->toString());
+      // Page 2 - link to page 3.
+      $pages[1] = Node::load($pages[1]->id());
+      $variables = ['node' => $pages[1]];
+      localgov_guides_preprocess_node($variables);
+      $this->assertEqual($variables['next_url']->toString(), $pages[2]->toUrl()->toString());
+      $this->assertEmpty($variables['previous_url']);
+      // Page 3 - previous link to page 2.
+      $pages[2] = Node::load($pages[2]->id());
+      $variables = ['node' => $pages[2]];
+      localgov_guides_preprocess_node($variables);
+      $this->assertEmpty($variables['next_url']);
+      $this->assertEqual($variables['previous_url']->toString(), $pages[1]->toUrl()->toString());
+    }
   }
 
 }

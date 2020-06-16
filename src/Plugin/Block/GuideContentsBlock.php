@@ -169,7 +169,7 @@ class GuideContentsBlock extends BlockBase implements ContainerFactoryPluginInte
       return $cacheable_item->getCacheTags();
     }, $cacheable_items);
 
-    $merged_tags = array_reduce($list_of_tag_collections, [Cache::class, 'mergeTags'], $initial = []);
+    $merged_tags = array_reduce($list_of_tag_collections, [Cache::class, 'mergeTags'], []);
     return $merged_tags;
   }
 
