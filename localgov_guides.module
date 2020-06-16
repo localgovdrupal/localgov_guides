@@ -116,7 +116,7 @@ function localgov_guides_optional_fields_settings($services, $topics) {
         ])->save();
       }
       if ($topics && !$form_display->getComponent('localgov_topics')) {
-        $form_display->setComponent('field_topic_term', [
+        $form_display->setComponent('localgov_topic_classified', [
           'type' => 'entity_reference_autocomplete',
           'region' => 'content',
           'settings' => [

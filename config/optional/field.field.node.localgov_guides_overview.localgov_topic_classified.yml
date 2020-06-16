@@ -2,11 +2,11 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_topic_term
+    - field.storage.node.localgov_topic_classified
     - node.type.localgov_guides_overview
-    - taxonomy.vocabulary.topic
-id: node.localgov_guides_overview.field_topic_term
-field_name: field_topic_term
+    - taxonomy.vocabulary.localgov_topic
+id: node.localgov_guides_overview.localgov_topic_classified
+field_name: localgov_topic_classified
 entity_type: node
 bundle: localgov_guides_overview
 label: 'Topic terms'
@@ -19,7 +19,7 @@ settings:
   handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
-      topic: topic
+      localgov_topic: localgov_topic
     sort:
       field: name
       direction: asc

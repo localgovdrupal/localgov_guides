@@ -69,7 +69,7 @@ class PagesIntegrationTest extends BrowserTestBase {
    * Post overview into a topic.
    */
   public function testTopicIntegration() {
-    $vocabulary = Vocabulary::load('topic');
+    $vocabulary = Vocabulary::load('localgov_topic');
     $term = $this->createTerm($vocabulary);
 
     $this->drupalLogin($this->adminUser);
@@ -78,7 +78,7 @@ class PagesIntegrationTest extends BrowserTestBase {
     $form->fillField('edit-title-0-value', 'Guide 1');
     $form->fillField('edit-body-0-summary', 'Guide 1 summary');
     $form->fillField('edit-body-0-value', 'Guide 1 description');
-    $form->fillField('edit-field-topic-term-0-target-id', "({$term->id()})");
+    $form->fillField('edit-localgov-topic-classified-0-target-id', "({$term->id()})");
     $form->checkField('edit-status-value');
     $form->pressButton('edit-submit');
   }
