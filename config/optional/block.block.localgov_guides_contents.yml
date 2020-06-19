@@ -1,0 +1,20 @@
+uuid: e5c7f023-2929-42b7-861a-3796d0808ec4
+langcode: en
+status: true
+dependencies:
+  module:
+    - localgov_guides
+  theme:
+    - localgov_theme
+id: localgov_guides_contents
+theme: localgov_theme
+region: content_top
+weight: 0
+provider: null
+plugin: localgov_guides_contents
+settings:
+  id: localgov_guides_contents
+  label: 'Guide contents'
+  provider: localgov_guides
+  label_display: '0'
+visibility: {  }

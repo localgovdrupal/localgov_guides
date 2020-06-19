@@ -1,6 +1,11 @@
-
-<nav class="section cta-pull">
-  <h2>Contents</h2>
+{#
+/**
+* @file
+* Default theme implementation for the guides_contents_block block.
+*/
+#}
+{% if links %}
+<nav class="cta">
   {% if format == 'ordered' %}
     <ol class="progress">
   {% elseif format == 'unordered' %}
@@ -13,15 +18,15 @@
     {% for link in links %}
       {% if format == 'dashes' %}
         {% if link.url.options.attributes.class == 'active' %}
-          <li> {{ link.text }} </li> 
-        {% else %}  
-          <li> {{ link }} </li> 
+          <li> {{ link.text }} </li>
+        {% else %}
+          <li> {{ link }} </li>
         {% endif %}
       {% else %}
         {% if link.url.options.attributes.class == 'active' %}
-          <li><span class="progress--step progress--active"></span> {{ link.text }} </li> 
-        {% else %}  
-          <li><span class="progress--step"></span> {{ link }} </li> 
+          <li><span class="progress--step progress--active"></span> {{ link.text }} </li>
+        {% else %}
+          <li><span class="progress--step"></span> {{ link }} </li>
         {% endif %}
       {% endif %}
     {% endfor %}
@@ -35,3 +40,4 @@
     </ul>
   {% endif %}
 </nav>
+{% endif %}

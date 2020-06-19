@@ -13,11 +13,25 @@ use Drupal\node\NodeInterface;
  */
 function localgov_guides_theme($existing, $type, $theme, $path) {
   return [
-    'guide_contents' => [
+    'guides_contents_block' => [
       'variables' => [
         'links' => [],
         'format' => [],
       ],
+    ],
+    'guides_prev_next_block' => [
+      'variables' => [
+        'previous_url' => NULL,
+        'next_url' => NULL,
+      ],
+    ],
+    'node__localgov_guides_overview__full' => [
+      'template' => 'node--localgov-guides-overview--full',
+      'base hook' => 'node',
+    ],
+    'node__localgov_guides_page__full' => [
+      'template' => 'node--localgov-guides-page--full',
+      'base hook' => 'node',
     ],
   ];
 }
@@ -40,35 +54,6 @@ function localgov_guides_node_update(NodeInterface $node) {
       if (array_search(['target_id' => $node->id()], $parent->localgov_guides_pages->getValue()) === FALSE) {
         $parent->localgov_guides_pages->appendItem(['target_id' => $node->id()]);
         $parent->save();
-      }
-    }
-  }
-}
-
-/**
- * Implements hook_preprocess_HOOK().
- *
- * Add extra fields to the guide pages.
- */
-function localgov_guides_preprocess_node(&$variables) {
-  $node = $variables['node'];
-  assert($node instanceof NodeInterface);
-
-  if ($node->bundle() == 'localgov_guides_overview') {
-    $variables['next_url'] = '';
-    if (!empty($node->localgov_guides_pages->entity)) {
-      $variables['next_url'] = $node->localgov_guides_pages->entity->toUrl();
-    }
-  }
-
-  if ($node->bundle() == 'localgov_guides_page') {
-    $variables['next_url'] = '';
-    $variables['previous_url'] = '';
-    if ($parent = $node->localgov_guides_parent->entity) {
-      if (!empty($parent->localgov_guides_pages)) {
-        $page_delta = array_search(['target_id' => $node->id()], $parent->localgov_guides_pages->getValue());
-        $variables['previous_url'] = !empty($parent->localgov_guides_pages[$page_delta - 1]->entity) ? $parent->localgov_guides_pages[$page_delta - 1]->entity->toUrl() : '';
-        $variables['next_url'] = !empty($parent->localgov_guides_pages[$page_delta + 1]->entity) ? $parent->localgov_guides_pages[$page_delta + 1]->entity->toUrl() : '';
       }
     }
   }
