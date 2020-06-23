@@ -54,7 +54,7 @@ class ContentsBlockTest extends BrowserTestBase {
   /**
    * Tests that block is only visible on guide pages.
    */
-  public function testBlockVisibility() {
+  public function testContentsBlockVisibility() {
     $overview = $this->createNode([
       'title' => 'Guide overview',
       'type' => 'localgov_guides_overview',

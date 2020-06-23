@@ -17,13 +17,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Guide contents block.
  *
  * @package Drupal\localgov_guides\Plugin\Block
- *
- * @Block(
- *   id = "localgov_guides_contents",
- *   admin_label = "Guide contents"
  * )
  */
-class GuideContentsBlock extends BlockBase implements ContainerFactoryPluginInterface {
+abstract class GuidesAbstractBaseBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * Guide overview node.
@@ -40,11 +36,18 @@ class GuideContentsBlock extends BlockBase implements ContainerFactoryPluginInte
   protected $guidePages;
 
   /**
+   * Guide node being displayed.
+   *
+   * @var \Drupal\node\NodeInterface
+   */
+  protected $node;
+
+  /**
    * List format.
    *
    * @var string
    */
-  protected $format;
+  protected $format = '';
 
   /**
    * {@inheritdoc}
@@ -85,43 +88,6 @@ class GuideContentsBlock extends BlockBase implements ContainerFactoryPluginInte
         $this->node = $node_storage->load($this->node);
       }
     }
-
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function blockAccess(AccountInterface $account) {
-    if ($this->node && (
-      ($this->node->bundle() == 'localgov_guides_overview' && !empty($this->node->localgov_guides_pages)) ||
-      ($this->node->bundle() == 'localgov_guides_page' && !empty($this->node->localgov_guides_parent)&& !empty($this->node->localgov_guides_parent->entity))
-    )) {
-      return AccessResult::allowed();
-    }
-    return AccessResult::neutral();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function build() {
-    $this->setPages();
-
-    $links = [];
-    foreach ($this->guidePages as $guide_node) {
-      assert($guide_node instanceof NodeInterface);
-      $options = $this->node->id() == $guide_node->id() ? ['attributes' => ['class' => 'active']] : [];
-      $links[] = $guide_node->toLink($guide_node->localgov_guides_section_title->value, 'canonical', $options);
-    }
-
-    $build = [];
-    $build[] = [
-      '#theme' => 'guide_contents',
-      '#links' => $links,
-      '#format' => $this->format,
-    ];
-
-    return $build;
   }
 
   /**
@@ -139,6 +105,19 @@ class GuideContentsBlock extends BlockBase implements ContainerFactoryPluginInte
       $this->guidePages = $this->overview->localgov_guides_pages->referencedEntities();
       $this->format = $this->overview->localgov_guides_list_format->value;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function blockAccess(AccountInterface $account) {
+    if ($this->node && (
+      ($this->node->bundle() == 'localgov_guides_overview' && !empty($this->node->localgov_guides_pages)) ||
+      ($this->node->bundle() == 'localgov_guides_page' && !empty($this->node->localgov_guides_parent)&& !empty($this->node->localgov_guides_parent->entity))
+    )) {
+      return AccessResult::allowed();
+    }
+    return AccessResult::neutral();
   }
 
   /**
@@ -164,7 +143,6 @@ class GuideContentsBlock extends BlockBase implements ContainerFactoryPluginInte
    *   Array of Drupal\Core\Cache\CacheableDependencyInterface objects.
    */
   protected function prepareCacheTags(array $cacheable_items): array {
-
     $list_of_tag_collections = array_map(function (CacheableDependencyInterface $cacheable_item): array {
       return $cacheable_item->getCacheTags();
     }, $cacheable_items);
