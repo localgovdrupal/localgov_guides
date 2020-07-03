@@ -44,7 +44,7 @@ content:
     weight: 14
     settings: {  }
     third_party_settings: {  }
-    type: entity_reference_labels
+    type: localgov_entity_reference_labels
     region: content
   localgov_guides_section_title:
     weight: 1
