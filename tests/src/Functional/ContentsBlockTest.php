@@ -96,30 +96,43 @@ class ContentsBlockTest extends BrowserTestBase {
       'type' => 'localgov_guides_overview',
       'status' => NodeInterface::PUBLISHED,
     ]);
+    $pages = [];
+    for ($i = 0; $i < 3; $i++) {
+      $pages[] = $this->createNode([
+        'title' => 'Guide page ' . $i,
+        'type' => 'localgov_guides_page',
+        'status' => NodeInterface::PUBLISHED,
+        'localgov_guides_parent' => ['target_id' => $overview->id()],
+      ]);
+    }
 
-    $this->createNode([
-      'title' => 'Guide page 1',
-      'type' => 'localgov_guides_page',
-      'status' => NodeInterface::PUBLISHED,
-      'localgov_guides_parent' => ['target_id' => $overview->id()],
-    ]);
-    $this->createNode([
-      'title' => 'Guide page 2',
-      'type' => 'localgov_guides_page',
-      'status' => NodeInterface::PUBLISHED,
-      'localgov_guides_parent' => ['target_id' => $overview->id()],
-    ]);
-    $this->createNode([
-      'title' => 'Guide page 3',
-      'type' => 'localgov_guides_page',
-      'status' => NodeInterface::PUBLISHED,
-      'localgov_guides_parent' => ['target_id' => $overview->id()],
-    ]);
-
+    // Check overview.
     $this->drupalGet($overview->toUrl()->toString());
-    $this->assertText('Guide page 1');
-    $this->assertText('Guide page 2');
-    $this->assertText('Guide page 3');
+    $xpath = '//ul[@class="progress"]/li';
+    $results = $this->xpath($xpath);
+    $this->assertEquals(4, count($results));
+    $this->assertContains('Guide overview', $results[0]->getText());
+    $this->assertNotContains($overview->toUrl()->toString(), $results[0]->getHtml());
+    $this->assertContains('Guide page 0', $results[1]->getText());
+    $this->assertContains($pages[0]->toUrl()->toString(), $results[1]->getHtml());
+    $this->assertContains('Guide page 1', $results[2]->getText());
+    $this->assertContains($pages[1]->toUrl()->toString(), $results[2]->getHtml());
+    $this->assertContains('Guide page 2', $results[3]->getText());
+    $this->assertContains($pages[2]->toUrl()->toString(), $results[3]->getHtml());
+
+    // Check page.
+    $this->drupalGet($pages[0]->toUrl()->toString());
+    $xpath = '//ul[@class="progress"]/li';
+    $results = $this->xpath($xpath);
+    $this->assertEquals(4, count($results));
+    $this->assertContains('Guide overview', $results[0]->getText());
+    $this->assertContains($overview->toUrl()->toString(), $results[0]->getHtml());
+    $this->assertContains('Guide page 0', $results[1]->getText());
+    $this->assertNotContains($pages[0]->toUrl()->toString(), $results[1]->getHtml());
+    $this->assertContains('Guide page 1', $results[2]->getText());
+    $this->assertContains($pages[1]->toUrl()->toString(), $results[2]->getHtml());
+    $this->assertContains('Guide page 2', $results[3]->getText());
+    $this->assertContains($pages[2]->toUrl()->toString(), $results[3]->getHtml());
 
     // Check caching.
     $this->createNode([
