@@ -2,6 +2,8 @@
 
 namespace Drupal\localgov_guides\Plugin\Block;
 
+use Drupal\node\NodeInterface;
+
 /**
  * Guide contents block.
  *
@@ -24,6 +26,7 @@ class GuidesContentsBlock extends GuidesAbstractBaseBlock {
     $options = $this->node->id() == $this->overview->id() ? ['attributes' => ['class' => 'active']] : [];
     $links[] = $this->overview->toLink($this->overview->localgov_guides_section_title->value, 'canonical', $options);
     foreach ($this->guidePages as $guide_node) {
+      assert($guide_node instanceof NodeInterface);
       $options = $this->node->id() == $guide_node->id() ? ['attributes' => ['class' => 'active']] : [];
       $links[] = $guide_node->toLink($guide_node->localgov_guides_section_title->value, 'canonical', $options);
     }
