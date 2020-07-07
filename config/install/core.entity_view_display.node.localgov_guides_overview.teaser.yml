@@ -17,14 +17,13 @@ targetEntityType: node
 bundle: localgov_guides_overview
 mode: teaser
 content:
-  body:
-    label: hidden
-    type: text_summary_or_trimmed
+  localgov_guides_description:
+    type: basic_string
     weight: 0
-    settings:
-      trim_length: 600
-    third_party_settings: {  }
     region: content
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
 hidden:
   localgov_guides_description: true
   localgov_guides_pages: true
