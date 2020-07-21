@@ -18,22 +18,28 @@ class GuidesPrevNextBlock extends GuidesAbstractBaseBlock {
   public function build() {
     $this->setPages();
     $previous_url = '';
+    $previous_title = '';
     $next_url = '';
+    $next_title = '';
 
     if ($this->node->bundle() == 'localgov_guides_overview' and count($this->guidePages) > 0) {
       $next_url = $this->guidePages[0]->toUrl();
+      $next_title = $this->guidePages[0]->localgov_guides_section_title->value;
     }
 
     if ($this->node->bundle() == 'localgov_guides_page') {
       $page_delta = array_search(['target_id' => $this->node->id()], $this->overview->localgov_guides_pages->getValue());
       if (!empty($this->guidePages[$page_delta - 1])) {
         $previous_url = $this->guidePages[$page_delta - 1]->toUrl();
+        $previous_title = $this->guidePages[$page_delta - 1]->localgov_guides_section_title->value;
       }
       else {
         $previous_url = $this->overview->toUrl();
+        $previous_title = $this->overview->localgov_guides_section_title->value;
       }
       if (!empty($this->guidePages[$page_delta + 1])) {
         $next_url = $this->guidePages[$page_delta + 1]->toUrl();
+        $next_title = $this->guidePages[$page_delta + 1]->localgov_guides_section_title->value;
       }
     }
 
@@ -41,7 +47,9 @@ class GuidesPrevNextBlock extends GuidesAbstractBaseBlock {
     $build[] = [
       '#theme' => 'guides_prev_next_block',
       '#previous_url' => $previous_url,
+      '#previous_title' => $previous_title,
       '#next_url' => $next_url,
+      '#next_title' => $next_title,
     ];
 
     return $build;
