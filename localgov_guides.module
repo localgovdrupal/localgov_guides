@@ -22,7 +22,9 @@ function localgov_guides_theme($existing, $type, $theme, $path) {
     'guides_prev_next_block' => [
       'variables' => [
         'previous_url' => NULL,
+        'previous_title' => NULL,
         'next_url' => NULL,
+        'next_title' => NULL,
       ],
     ],
     'node__localgov_guides_overview__full' => [
