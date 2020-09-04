@@ -6,7 +6,7 @@
   "license": "GPL-2.0-or-later",
   "minimum-stability": "dev",
   "require": {
-    "localgovdrupal/localgov_core": "dev-master"
+    "localgovdrupal/localgov_core": "dev-feature/homepage-paragraphs-display-modes"
   },
   "require-dev": {
     "localgovdrupal/localgov_services": "dev-master",
