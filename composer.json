@@ -6,11 +6,11 @@
   "license": "GPL-2.0-or-later",
   "minimum-stability": "dev",
   "require": {
-    "localgovdrupal/localgov_core": "dev-master"
+    "localgovdrupal/localgov_core": "^1.0@alpha"
   },
   "require-dev": {
-    "localgovdrupal/localgov_services": "dev-master",
-    "localgovdrupal/localgov_topics": "dev-master",
+    "localgovdrupal/localgov_services": "^1.0@alpha",
+    "localgovdrupal/localgov_topics": "^1.0@alpha",
     "drupal/pathauto": "^1.6"
   }
 }
