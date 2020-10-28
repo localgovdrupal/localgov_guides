@@ -27,8 +27,10 @@ class GuidesContentsBlock extends GuidesAbstractBaseBlock {
     $links[] = $this->overview->toLink($this->overview->localgov_guides_section_title->value, 'canonical', $options);
     foreach ($this->guidePages as $guide_node) {
       assert($guide_node instanceof NodeInterface);
-      $options = $this->node->id() == $guide_node->id() ? ['attributes' => ['class' => 'active']] : [];
-      $links[] = $guide_node->toLink($guide_node->localgov_guides_section_title->value, 'canonical', $options);
+      if ($guide_node->access('view')) {
+        $options = $this->node->id() == $guide_node->id() ? ['attributes' => ['class' => 'active']] : [];
+        $links[] = $guide_node->toLink($guide_node->localgov_guides_section_title->value, 'canonical', $options);
+      }
     }
 
     $build = [];
