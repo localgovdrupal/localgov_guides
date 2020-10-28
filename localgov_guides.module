@@ -52,6 +52,17 @@ function localgov_guides_node_insert(NodeInterface $node) {
  */
 function localgov_guides_node_update(NodeInterface $node) {
   if ($node->bundle() == 'localgov_guides_page') {
+    if (
+      ($previous = $node->original) &&
+      ($previous->localgov_guides_parent->target_id != $node->localgov_guides_parent->target_id)
+    ) {
+      if ($old_parent = $node->original->localgov_guides_parent->entity) {
+        foreach (array_keys($old_parent->localgov_guides_pages->getValue(), ['target_id' => $node->id()]) as $offset) {
+          $old_parent->localgov_guides_pages->offsetUnset($offset);
+        }
+        $old_parent->save();
+      }
+    }
     if ($parent = $node->localgov_guides_parent->entity) {
       if (array_search(['target_id' => $node->id()], $parent->localgov_guides_pages->getValue()) === FALSE) {
         $parent->localgov_guides_pages->appendItem(['target_id' => $node->id()]);
