@@ -57,15 +57,23 @@ function localgov_guides_node_update(NodeInterface $node) {
       ($previous = $node->original) &&
       ($previous->localgov_guides_parent->target_id != $node->localgov_guides_parent->target_id)
     ) {
+      // There is a previous version of this page.
+      // The guide overview it is in isn't the same in the previous and new
+      // versions.
       if ($old_parent = $node->original->localgov_guides_parent->entity) {
+        // Getting the old guide overview we look for all the references to this
+        // page.
         foreach (array_keys($old_parent->localgov_guides_pages->getValue(), ['target_id' => $node->id()]) as $offset) {
+          // And remove each reference on the old parent to this page.
           $old_parent->localgov_guides_pages->offsetUnset($offset);
         }
         $old_parent->save();
       }
     }
     if ($parent = $node->localgov_guides_parent->entity) {
+      // The current version of this page points to an overview.
       if (array_search(['target_id' => $node->id()], $parent->localgov_guides_pages->getValue()) === FALSE) {
+        // The overview does not yet point to this page, so we add it.
         $parent->localgov_guides_pages->appendItem(['target_id' => $node->id()]);
         $parent->save();
       }
