@@ -6,6 +6,7 @@
  */
 
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 
 /**
@@ -68,6 +69,50 @@ function localgov_guides_node_update(NodeInterface $node) {
         $parent->localgov_guides_pages->appendItem(['target_id' => $node->id()]);
         $parent->save();
       }
+    }
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_prepare_form().
+ *
+ * Check back-reference fields before editing overview.
+ */
+function localgov_guides_node_prepare_form(NodeInterface $node, $operation, FormStateInterface $form) {
+  if ($node->bundle() == 'localgov_guides_overview') {
+    localgov_guides_overview_pages_check($node);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ *
+ * Check back-reference fields before saving.
+ * Especially if someone has changed a page since form load!
+ */
+function localgov_guides_node_presave(NodeInterface $node) {
+  if ($node->bundle() == 'localgov_guides_overview') {
+    localgov_guides_overview_pages_check($node);
+  }
+}
+
+/**
+ * Check backward references.
+ */
+function localgov_guides_overview_pages_check(NodeInterface $node) {
+  $query = \Drupal::entityQuery('node');
+  $query->condition('type', 'localgov_guides_page');
+  $query->condition('localgov_guides_parent', $node->id());
+  $actual_children = $query->execute();
+  $linked_children = array_column($node->localgov_guides_pages->getValue(), 'target_id');
+  $missing_children = array_diff($actual_children, $linked_children);
+  $extra_children = array_diff($linked_children, $actual_children);
+  foreach ($missing_children as $missing) {
+    $node->localgov_guides_pages->appendItem(['target_id' => $missing]);
+  }
+  foreach ($extra_children as $extra) {
+    foreach (array_keys($node->localgov_guides_pages->getValue(), ['target_id' => $extra]) as $offset) {
+      $node->localgov_guides_pages->offsetUnset($offset);
     }
   }
 }
