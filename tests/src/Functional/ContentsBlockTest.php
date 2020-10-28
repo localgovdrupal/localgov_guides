@@ -135,8 +135,8 @@ class ContentsBlockTest extends BrowserTestBase {
     $this->assertContains($pages[2]->toUrl()->toString(), $results[3]->getHtml());
 
     // Check caching.
-    $this->createNode([
-      'title' => 'Guide page 4',
+    $pages[] = $this->createNode([
+      'title' => 'Guide page 3',
       'type' => 'localgov_guides_page',
       'status' => NodeInterface::PUBLISHED,
       'localgov_guides_parent' => ['target_id' => $overview->id()],
@@ -145,7 +145,7 @@ class ContentsBlockTest extends BrowserTestBase {
     $xpath = '//ul[@class="progress"]/li';
     $results = $this->xpath($xpath);
     $this->assertEquals(5, count($results));
-    $this->assertText('Guide page 4');
+    $this->assertText('Guide page 3');
     // Change title.
     $pages[2]->title = 'New title page 2';
     $pages[2]->save();
@@ -197,6 +197,14 @@ class ContentsBlockTest extends BrowserTestBase {
     $results = $this->xpath($xpath);
     $this->assertEquals(3, count($results));
     $this->assertNoText('Guide page 1');
+
+    // Delete page.
+    $pages[3]->delete();
+    $this->drupalGet($overview->toUrl()->toString());
+    $xpath = '//ul[@class="progress"]/li';
+    $results = $this->xpath($xpath);
+    $this->assertEquals(2, count($results));
+    $this->assertNoText('Guide page 3');
   }
 
 }
