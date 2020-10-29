@@ -30,14 +30,16 @@ class PageHeaderSubscriber implements EventSubscriberInterface {
       $event->getEntity()->bundle() == 'localgov_guides_page' &&
       $event->getEntity()->localgov_guides_parent
     ) {
-      $overview = $event->getEntity()->localgov_guides_parent->entity;
-      $event->setTitle($overview->getTitle());
-      if ($overview->get('body')->summary) {
-        $event->setLede([
-          '#type' => 'html_tag',
-          '#tag' => 'p',
-          '#value' => $overview->get('body')->summary,
-        ]);
+      $overview = $event->getEntity()->localgov_guides_parent->getEntity();
+      if (!empty($overview) {
+        $event->setTitle($overview->getTitle());
+        if ($overview->get('body')->summary) {
+          $event->setLede([
+            '#type' => 'html_tag',
+            '#tag' => 'p',
+            '#value' => $overview->get('body')->summary,
+          ]);
+        }
       }
       else {
         $event->setLede('');
