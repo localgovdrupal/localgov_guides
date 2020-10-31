@@ -8,6 +8,7 @@
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
+use Drupal\localgov_guides\ChildParentRelationship;
 
 /**
  * Implements hook_theme().
@@ -43,7 +44,11 @@ function localgov_guides_theme($existing, $type, $theme, $path) {
  * Implements hook_ENTITY_TYPE_insert().
  */
 function localgov_guides_node_insert(NodeInterface $node) {
-  localgov_guides_node_update($node);
+  if ($node->bundle() == 'localgov_guides_page') {
+    return \Drupal::service('class_resolver')
+      ->getInstanceFromDefinition(ChildParentRelationship::class)
+      ->pageUpdateOverview($node);
+  }
 }
 
 /**
@@ -53,31 +58,9 @@ function localgov_guides_node_insert(NodeInterface $node) {
  */
 function localgov_guides_node_update(NodeInterface $node) {
   if ($node->bundle() == 'localgov_guides_page') {
-    if (
-      ($previous = $node->original) &&
-      ($previous->localgov_guides_parent->target_id != $node->localgov_guides_parent->target_id)
-    ) {
-      // There is a previous version of this page.
-      // The guide overview it is in isn't the same in the previous and new
-      // versions.
-      if ($old_parent = $node->original->localgov_guides_parent->entity) {
-        // Getting the old guide overview we look for all the references to this
-        // page.
-        foreach (array_keys($old_parent->localgov_guides_pages->getValue(), ['target_id' => $node->id()]) as $offset) {
-          // And remove each reference on the old parent to this page.
-          $old_parent->localgov_guides_pages->offsetUnset($offset);
-        }
-        $old_parent->save();
-      }
-    }
-    if ($parent = $node->localgov_guides_parent->entity) {
-      // The current version of this page points to an overview.
-      if (array_search(['target_id' => $node->id()], $parent->localgov_guides_pages->getValue()) === FALSE) {
-        // The overview does not yet point to this page, so we add it.
-        $parent->localgov_guides_pages->appendItem(['target_id' => $node->id()]);
-        $parent->save();
-      }
-    }
+    return \Drupal::service('class_resolver')
+      ->getInstanceFromDefinition(ChildParentRelationship::class)
+      ->pageUpdateOverview($node);
   }
 }
 
@@ -88,7 +71,9 @@ function localgov_guides_node_update(NodeInterface $node) {
  */
 function localgov_guides_node_prepare_form(NodeInterface $node, $operation, FormStateInterface $form) {
   if ($node->bundle() == 'localgov_guides_overview') {
-    localgov_guides_overview_pages_check($node);
+    return \Drupal::service('class_resolver')
+      ->getInstanceFromDefinition(ChildParentRelationship::class)
+      ->overviewPagesCheck($node);
   }
 }
 
@@ -100,28 +85,9 @@ function localgov_guides_node_prepare_form(NodeInterface $node, $operation, Form
  */
 function localgov_guides_node_presave(NodeInterface $node) {
   if ($node->bundle() == 'localgov_guides_overview') {
-    localgov_guides_overview_pages_check($node);
-  }
-}
-
-/**
- * Check backward references.
- */
-function localgov_guides_overview_pages_check(NodeInterface $node) {
-  $query = \Drupal::entityQuery('node');
-  $query->condition('type', 'localgov_guides_page');
-  $query->condition('localgov_guides_parent', $node->id());
-  $actual_children = $query->execute();
-  $linked_children = array_column($node->localgov_guides_pages->getValue(), 'target_id');
-  $missing_children = array_diff($actual_children, $linked_children);
-  $extra_children = array_diff($linked_children, $actual_children);
-  foreach ($missing_children as $missing) {
-    $node->localgov_guides_pages->appendItem(['target_id' => $missing]);
-  }
-  foreach ($extra_children as $extra) {
-    foreach (array_keys($node->localgov_guides_pages->getValue(), ['target_id' => $extra]) as $offset) {
-      $node->localgov_guides_pages->offsetUnset($offset);
-    }
+    return \Drupal::service('class_resolver')
+      ->getInstanceFromDefinition(ChildParentRelationship::class)
+      ->overviewPagesCheck($node);
   }
 }
 
