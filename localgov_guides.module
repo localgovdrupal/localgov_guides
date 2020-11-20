@@ -6,7 +6,9 @@
  */
 
 use Drupal\Core\Entity\Display\EntityFormDisplayInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
+use Drupal\localgov_guides\ChildParentRelationship;
 
 /**
  * Implements hook_theme().
@@ -42,7 +44,11 @@ function localgov_guides_theme($existing, $type, $theme, $path) {
  * Implements hook_ENTITY_TYPE_insert().
  */
 function localgov_guides_node_insert(NodeInterface $node) {
-  localgov_guides_node_update($node);
+  if ($node->bundle() == 'localgov_guides_page') {
+    return \Drupal::service('class_resolver')
+      ->getInstanceFromDefinition(ChildParentRelationship::class)
+      ->pageUpdateOverview($node);
+  }
 }
 
 /**
@@ -52,12 +58,36 @@ function localgov_guides_node_insert(NodeInterface $node) {
  */
 function localgov_guides_node_update(NodeInterface $node) {
   if ($node->bundle() == 'localgov_guides_page') {
-    if ($parent = $node->localgov_guides_parent->entity) {
-      if (array_search(['target_id' => $node->id()], $parent->localgov_guides_pages->getValue()) === FALSE) {
-        $parent->localgov_guides_pages->appendItem(['target_id' => $node->id()]);
-        $parent->save();
-      }
-    }
+    return \Drupal::service('class_resolver')
+      ->getInstanceFromDefinition(ChildParentRelationship::class)
+      ->pageUpdateOverview($node);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_prepare_form().
+ *
+ * Check back-reference fields before editing overview.
+ */
+function localgov_guides_node_prepare_form(NodeInterface $node, $operation, FormStateInterface $form) {
+  if ($node->bundle() == 'localgov_guides_overview') {
+    return \Drupal::service('class_resolver')
+      ->getInstanceFromDefinition(ChildParentRelationship::class)
+      ->overviewPagesCheck($node);
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_presave().
+ *
+ * Check back-reference fields before saving.
+ * Especially if someone has changed a page since form load!
+ */
+function localgov_guides_node_presave(NodeInterface $node) {
+  if ($node->bundle() == 'localgov_guides_overview') {
+    return \Drupal::service('class_resolver')
+      ->getInstanceFromDefinition(ChildParentRelationship::class)
+      ->overviewPagesCheck($node);
   }
 }
 
