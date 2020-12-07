@@ -28,9 +28,9 @@ class PageHeaderSubscriber implements EventSubscriberInterface {
   public function setPageHeader(PageHeaderDisplayEvent $event) {
     if ($event->getEntity() instanceof Node &&
       $event->getEntity()->bundle() == 'localgov_guides_page' &&
-      $event->getEntity()->localgov_guides_parent
+      $event->getEntity()->localgov_guides_parent->entity
     ) {
-      $overview = $event->getEntity()->localgov_guides_parent->getEntity();
+      $overview = $event->getEntity()->localgov_guides_parent->entity;
       if (!empty($overview)) {
         $event->setTitle($overview->getTitle());
         if ($overview->get('body')->summary) {
