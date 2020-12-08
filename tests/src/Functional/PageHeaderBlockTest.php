@@ -87,34 +87,19 @@ class PageHeaderBlockTest extends BrowserTestBase {
     ]);
 
     $this->drupalGet($overview->toUrl()->toString());
-<<<<<<< HEAD
     $this->assertSession()->responseContains('<h1 class="header">' . $overview_title . '</h1>');
-    $this->assertRaw('<div class="subheader">' . $overview_lede . '</div>');
+    $this->assertSession()->responseContains('<p>' . $orphan_summary . '</p>');
 
     $this->drupalGet($page->toUrl()->toString());
     $this->assertSession()->responseContains('<h1 class="header">' . $overview_title . '</h1>');
     $this->assertSession()->responseNotContains('<h1 class="header">' . $page_title . '</h1>');
-    $this->assertRaw('<div class="subheader">' . $overview_lede . '</div>');
-    $this->assertNoRaw('<div class="subheader">' . $page_summary . '</div>');
+    $this->assertSession()->responseContains('<p>' . $overview_lede . '</p>');
+    $this->assertSession()->responseNotContains('<p>' . $page_summary . '</p>');
 
     $this->drupalGet($orphan->toUrl()->toString());
     $this->assertSession()->responseNotContains('<h1 class="header">' . $overview_title . '</h1>');
     $this->assertSession()->responseContains('<h1 class="header">' . $orphan_title . '</h1>');
-    $this->assertRaw('<div class="subheader">' . $orphan_summary . '</div>');
-=======
-    $this->assertRaw('<h1 class="header">' . $overview_title . '</h1>');
-    $this->assertRaw('<p>' . $overview_lede . '</p>');
-
-    $this->drupalGet($page->toUrl()->toString());
-    $this->assertRaw('<h1 class="header">' . $overview_title . '</h1>');
-    $this->assertNoRaw('<h1 class="header">' . $page_title . '</h1>');
-    $this->assertRaw('<p>' . $overview_lede . '</p>');
-    $this->assertNoRaw('<p>' . $page_summary . '</p>');
-
-    $this->drupalGet($orphan->toUrl()->toString());
-    $this->assertRaw('<h1 class="header">' . $orphan_title . '</h1>');
-    $this->assertRaw('<p>' . $orphan_summary . '</p>');
->>>>>>> 9e8f0c7... Use the guide overview description field for the guide lede
+    $this->assertSession()->responseContains('<p>' . $orphan_summary . '</p>');
   }
 
 }
