@@ -91,4 +91,5 @@ class PageHeaderBlockTest extends BrowserTestBase {
     $this->assertSession()->responseNotContains('<h1 class="header">' . $overview_title . '</h1>');
     $this->assertSession()->responseContains('<h1 class="header">' . $orphan_title . '</h1>');
   }
+
 }
