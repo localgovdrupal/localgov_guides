@@ -71,7 +71,7 @@ class PageHeaderBlockTest extends BrowserTestBase {
     $page_summary = 'Guide page summary - ' . $this->randomMachineName(8);
     $page = $this->createNode([
       'title' => $page_title,
-      'summary' => $page_summary,
+      'body' => ['value' => $page_summary . ' - body', 'summary' => $page_summary],
       'type' => 'localgov_guides_page',
       'status' => NodeInterface::PUBLISHED,
       'localgov_guides_parent' => ['target_id' => $overview->id()],
@@ -81,12 +81,13 @@ class PageHeaderBlockTest extends BrowserTestBase {
     $orphan_summary = 'Guide orphan summary - ' . $this->randomMachineName(8);
     $orphan = $this->createNode([
       'title' => $orphan_title,
-      'summary' => $orphan_summary,
+      'body' => ['value' => $orphan_summary . ' - body', 'summary' => $orphan_summary],
       'type' => 'localgov_guides_page',
       'status' => NodeInterface::PUBLISHED,
     ]);
 
     $this->drupalGet($overview->toUrl()->toString());
+<<<<<<< HEAD
     $this->assertSession()->responseContains('<h1 class="header">' . $overview_title . '</h1>');
     $this->assertRaw('<div class="subheader">' . $overview_lede . '</div>');
 
@@ -100,6 +101,20 @@ class PageHeaderBlockTest extends BrowserTestBase {
     $this->assertSession()->responseNotContains('<h1 class="header">' . $overview_title . '</h1>');
     $this->assertSession()->responseContains('<h1 class="header">' . $orphan_title . '</h1>');
     $this->assertRaw('<div class="subheader">' . $orphan_summary . '</div>');
+=======
+    $this->assertRaw('<h1 class="header">' . $overview_title . '</h1>');
+    $this->assertRaw('<p>' . $overview_lede . '</p>');
+
+    $this->drupalGet($page->toUrl()->toString());
+    $this->assertRaw('<h1 class="header">' . $overview_title . '</h1>');
+    $this->assertNoRaw('<h1 class="header">' . $page_title . '</h1>');
+    $this->assertRaw('<p>' . $overview_lede . '</p>');
+    $this->assertNoRaw('<p>' . $page_summary . '</p>');
+
+    $this->drupalGet($orphan->toUrl()->toString());
+    $this->assertRaw('<h1 class="header">' . $orphan_title . '</h1>');
+    $this->assertRaw('<p>' . $orphan_summary . '</p>');
+>>>>>>> 9e8f0c7... Use the guide overview description field for the guide lede
   }
 
 }
