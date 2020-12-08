@@ -59,37 +59,47 @@ class PageHeaderBlockTest extends BrowserTestBase {
    */
   public function testGuidePageHeaderBlock() {
     $overview_title = 'Guide overview - ' . $this->randomMachineName(8);
+    $overview_lede = 'Guide overview summary - ' .  $this->randomMachineName(8);
     $overview = $this->createNode([
       'title' => $overview_title,
+      'localgov_guides_description' => $overview_lede,
       'type' => 'localgov_guides_overview',
       'status' => NodeInterface::PUBLISHED,
     ]);
 
     $page_title = 'Guide page - ' . $this->randomMachineName(8);
+    $page_summary = 'Guide page summary - ' . $this->randomMachineName(8);
     $page = $this->createNode([
       'title' => $page_title,
+      'summary' => $page_summary,
       'type' => 'localgov_guides_page',
       'status' => NodeInterface::PUBLISHED,
       'localgov_guides_parent' => ['target_id' => $overview->id()],
     ]);
 
     $orphan_title = 'Guide page - ' . $this->randomMachineName(8);
+    $orphan_summary = 'Guide orphan summary - ' . $this->randomMachineName(8);
     $orphan = $this->createNode([
       'title' => $orphan_title,
+      'summary' => $orphan_summary,
       'type' => 'localgov_guides_page',
       'status' => NodeInterface::PUBLISHED,
     ]);
 
     $this->drupalGet($overview->toUrl()->toString());
     $this->assertSession()->responseContains('<h1 class="header">' . $overview_title . '</h1>');
+    $this->assertRaw('<div class="subheader">' . $overview_lede . '</div>');
 
     $this->drupalGet($page->toUrl()->toString());
     $this->assertSession()->responseContains('<h1 class="header">' . $overview_title . '</h1>');
     $this->assertSession()->responseNotContains('<h1 class="header">' . $page_title . '</h1>');
+    $this->assertRaw('<div class="subheader">' . $overview_lede . '</div>');
+    $this->assertNoRaw('<div class="subheader">' . $page_summary . '</div>');
 
     $this->drupalGet($orphan->toUrl()->toString());
     $this->assertSession()->responseNotContains('<h1 class="header">' . $overview_title . '</h1>');
     $this->assertSession()->responseContains('<h1 class="header">' . $orphan_title . '</h1>');
+    $this->assertRaw('<div class="subheader">' . $orphan_summary . '</div>');
   }
 
 }
