@@ -81,14 +81,14 @@ class PageHeaderBlockTest extends BrowserTestBase {
     ]);
 
     $this->drupalGet($overview->toUrl()->toString());
-    $this->assertRaw('<h1 class="header">' . $overview_title . '</h1>');
+    $this->assertSession()->responseContains('<h1 class="header">' . $overview_title . '</h1>');
 
     $this->drupalGet($page->toUrl()->toString());
-    $this->assertRaw('<h1 class="header">' . $overview_title . '</h1>');
-    $this->assertNoRaw('<h1 class="header">' . $page_title . '</h1>');
+    $this->assertSession()->responseContains('<h1 class="header">' . $overview_title . '</h1>');
+    $this->assertSession()->responseNotContains('<h1 class="header">' . $page_title . '</h1>');
 
     $this->drupalGet($orphan->toUrl()->toString());
-    $this->assertNoRaw('<h1 class="header">' . $overview_title . '</h1>');
-    $this->assertRaw('<h1 class="header">' . $orphan_title . '</h1>');
+    $this->assertSession()->responseNotContains('<h1 class="header">' . $overview_title . '</h1>');
+    $this->assertSession()->responseContains('<h1 class="header">' . $orphan_title . '</h1>');
   }
 }
