@@ -88,7 +88,7 @@ class PageHeaderBlockTest extends BrowserTestBase {
 
     $this->drupalGet($overview->toUrl()->toString());
     $this->assertSession()->responseContains('<h1 class="header">' . $overview_title . '</h1>');
-    $this->assertSession()->responseContains('<p>' . $orphan_summary . '</p>');
+    $this->assertSession()->responseContains('<p>' . $overview_lede . '</p>');
 
     $this->drupalGet($page->toUrl()->toString());
     $this->assertSession()->responseContains('<h1 class="header">' . $overview_title . '</h1>');
