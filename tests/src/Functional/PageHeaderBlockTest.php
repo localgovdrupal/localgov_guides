@@ -59,7 +59,7 @@ class PageHeaderBlockTest extends BrowserTestBase {
    */
   public function testGuidePageHeaderBlock() {
     $overview_title = 'Guide overview - ' . $this->randomMachineName(8);
-    $overview_lede = 'Guide overview summary - ' .  $this->randomMachineName(8);
+    $overview_lede = 'Guide overview summary - ' . $this->randomMachineName(8);
     $overview = $this->createNode([
       'title' => $overview_title,
       'localgov_guides_description' => $overview_lede,
