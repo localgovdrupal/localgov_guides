@@ -95,6 +95,39 @@ class PrevNextBlockTest extends BrowserTestBase {
     $this->assertSession()->responseContains($pages[1]->toUrl()->toString());
     $this->assertSession()->pageTextNotContains('Next');
 
+    // Unpublish a page.
+    $pages[1]->status = NodeInterface::NOT_PUBLISHED;
+    $pages[1]->save();
+    // Still linked.
+    $content_admin = $this->drupalCreateUser(['bypass node access']);
+    $this->drupalLogin($content_admin);
+    $this->drupalGet($pages[0]->toUrl()->toString());
+    $this->assertSession()->pageTextContains('Prev');
+    $this->assertSession()->responseContains($overview->toUrl()->toString());
+    $this->assertSession()->pageTextContains('Next');
+    $this->assertSession()->responseContains($pages[1]->toUrl()->toString());
+    $this->drupalGet($pages[1]->toUrl()->toString());
+    $this->assertSession()->pageTextContains('Prev');
+    $this->assertSession()->responseContains($pages[0]->toUrl()->toString());
+    $this->assertSession()->pageTextContains('Next');
+    $this->assertSession()->responseContains($pages[2]->toUrl()->toString());
+    $this->drupalGet($pages[2]->toUrl()->toString());
+    $this->assertSession()->pageTextContains('Prev');
+    $this->assertSession()->responseContains($pages[1]->toUrl()->toString());
+    $this->assertSession()->pageTextNotContains('Next');
+    $this->drupalLogout();
+    // But not for anon.
+    $this->drupalGet($pages[0]->toUrl()->toString());
+    $this->assertSession()->pageTextContains('Prev');
+    $this->assertSession()->responseContains($overview->toUrl()->toString());
+    $this->assertSession()->pageTextContains('Next');
+    $this->assertSession()->responseContains($pages[2]->toUrl()->toString());
+    $this->drupalGet($pages[2]->toUrl()->toString());
+    $this->assertSession()->pageTextContains('Prev');
+    $this->assertSession()->responseContains($pages[0]->toUrl()->toString());
+    $this->assertSession()->pageTextNotContains('Next');
+    $this->drupalLogout();
+
     // Check deleting page.
     // Following test will fail because of reliance on deltas:
     // https://github.com/localgovdrupal/localgov_guides/issues/6#issuecomment-644155487
