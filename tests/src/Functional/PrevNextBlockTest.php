@@ -126,7 +126,6 @@ class PrevNextBlockTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Prev');
     $this->assertSession()->responseContains($pages[0]->toUrl()->toString());
     $this->assertSession()->pageTextNotContains('Next');
-    $this->drupalLogout();
 
     // Check deleting page.
     // Following test will fail because of reliance on deltas:
