@@ -2,8 +2,6 @@
 
 namespace Drupal\localgov_guides\Plugin\Block;
 
-use Drupal\node\NodeInterface;
-
 /**
  * Guide contents block.
  *
