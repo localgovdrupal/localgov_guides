@@ -20,7 +20,7 @@ class ContentsBlockTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'block',
     'path',
     'options',
@@ -42,7 +42,7 @@ class ContentsBlockTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->adminUser = $this->drupalCreateUser(['administer blocks']);
@@ -110,29 +110,29 @@ class ContentsBlockTest extends BrowserTestBase {
     $this->drupalGet($overview->toUrl()->toString());
     $xpath = '//ul[@class="progress"]/li';
     $results = $this->xpath($xpath);
-    $this->assertEquals(4, count($results));
-    $this->assertContains('Guide overview', $results[0]->getText());
-    $this->assertNotContains($overview->toUrl()->toString(), $results[0]->getHtml());
-    $this->assertContains('Guide page 0', $results[1]->getText());
-    $this->assertContains($pages[0]->toUrl()->toString(), $results[1]->getHtml());
-    $this->assertContains('Guide page 1', $results[2]->getText());
-    $this->assertContains($pages[1]->toUrl()->toString(), $results[2]->getHtml());
-    $this->assertContains('Guide page 2', $results[3]->getText());
-    $this->assertContains($pages[2]->toUrl()->toString(), $results[3]->getHtml());
+    $this->assertCount(4, $results);
+    $this->assertStringContainsString('Guide overview', $results[0]->getText());
+    $this->assertStringNotContainsString($overview->toUrl()->toString(), $results[0]->getHtml());
+    $this->assertStringContainsString('Guide page 0', $results[1]->getText());
+    $this->assertStringContainsString($pages[0]->toUrl()->toString(), $results[1]->getHtml());
+    $this->assertStringContainsString('Guide page 1', $results[2]->getText());
+    $this->assertStringContainsString($pages[1]->toUrl()->toString(), $results[2]->getHtml());
+    $this->assertStringContainsString('Guide page 2', $results[3]->getText());
+    $this->assertStringContainsString($pages[2]->toUrl()->toString(), $results[3]->getHtml());
 
     // Check page.
     $this->drupalGet($pages[0]->toUrl()->toString());
     $xpath = '//ul[@class="progress"]/li';
     $results = $this->xpath($xpath);
-    $this->assertEquals(4, count($results));
-    $this->assertContains('Guide overview', $results[0]->getText());
-    $this->assertContains($overview->toUrl()->toString(), $results[0]->getHtml());
-    $this->assertContains('Guide page 0', $results[1]->getText());
-    $this->assertNotContains($pages[0]->toUrl()->toString(), $results[1]->getHtml());
-    $this->assertContains('Guide page 1', $results[2]->getText());
-    $this->assertContains($pages[1]->toUrl()->toString(), $results[2]->getHtml());
-    $this->assertContains('Guide page 2', $results[3]->getText());
-    $this->assertContains($pages[2]->toUrl()->toString(), $results[3]->getHtml());
+    $this->assertCount(4, $results);
+    $this->assertStringContainsString('Guide overview', $results[0]->getText());
+    $this->assertStringContainsString($overview->toUrl()->toString(), $results[0]->getHtml());
+    $this->assertStringContainsString('Guide page 0', $results[1]->getText());
+    $this->assertStringNotContainsString($pages[0]->toUrl()->toString(), $results[1]->getHtml());
+    $this->assertStringContainsString('Guide page 1', $results[2]->getText());
+    $this->assertStringContainsString($pages[1]->toUrl()->toString(), $results[2]->getHtml());
+    $this->assertStringContainsString('Guide page 2', $results[3]->getText());
+    $this->assertStringContainsString($pages[2]->toUrl()->toString(), $results[3]->getHtml());
 
     // Check caching.
     $pages[] = $this->createNode([
@@ -144,14 +144,14 @@ class ContentsBlockTest extends BrowserTestBase {
     $this->drupalGet($overview->toUrl()->toString());
     $xpath = '//ul[@class="progress"]/li';
     $results = $this->xpath($xpath);
-    $this->assertEquals(5, count($results));
-    $this->assertText('Guide page 3');
+    $this->assertCount(5, $results);
+    $this->assertSession()->responseContains('Guide page 3');
     // Change title.
     $pages[2]->title = 'New title page 2';
     $pages[2]->save();
     $this->drupalGet($overview->toUrl()->toString());
-    $this->assertNoText('Guide page 2');
-    $this->assertText('New title page 2');
+    $this->assertSession()->responseNotContains('Guide page 2');
+    $this->assertSession()->responseContains('New title page 2');
 
     // Another overview.
     $overview_2 = $this->createNode([
@@ -167,17 +167,17 @@ class ContentsBlockTest extends BrowserTestBase {
     $this->drupalGet($overview->toUrl()->toString());
     $xpath = '//ul[@class="progress"]/li';
     $results = $this->xpath($xpath);
-    $this->assertEquals(4, count($results));
-    $this->assertNotContains('Guide page 0', $results[1]->getText());
+    $this->assertCount(4, $results);
+    $this->assertStringNotContainsString('Guide page 0', $results[1]->getText());
     // Check new overview.
     $this->drupalGet($overview_2->toUrl()->toString());
     $xpath = '//ul[@class="progress"]/li';
     $results = $this->xpath($xpath);
-    $this->assertEquals(2, count($results));
-    $this->assertContains('Guide overview', $results[0]->getText());
-    $this->assertNotContains($overview_2->toUrl()->toString(), $results[0]->getHtml());
-    $this->assertContains('Guide page 0', $results[1]->getText());
-    $this->assertContains($pages[0]->toUrl()->toString(), $results[1]->getHtml());
+    $this->assertCount(2, $results);
+    $this->assertStringContainsString('Guide overview', $results[0]->getText());
+    $this->assertStringNotContainsString($overview_2->toUrl()->toString(), $results[0]->getHtml());
+    $this->assertStringContainsString('Guide page 0', $results[1]->getText());
+    $this->assertStringContainsString($pages[0]->toUrl()->toString(), $results[1]->getHtml());
 
     // Unpublish a page.
     $pages[1]->status = NodeInterface::NOT_PUBLISHED;
@@ -188,23 +188,23 @@ class ContentsBlockTest extends BrowserTestBase {
     $this->drupalGet($overview->toUrl()->toString());
     $xpath = '//ul[@class="progress"]/li';
     $results = $this->xpath($xpath);
-    $this->assertEquals(4, count($results));
-    $this->assertText('Guide page 1');
+    $this->assertCount(4, $results);
+    $this->assertSession()->responseContains('Guide page 1');
     $this->drupalLogout();
     // But not for anon.
     $this->drupalGet($overview->toUrl()->toString());
     $xpath = '//ul[@class="progress"]/li';
     $results = $this->xpath($xpath);
-    $this->assertEquals(3, count($results));
-    $this->assertNoText('Guide page 1');
+    $this->assertCount(3, $results);
+    $this->assertSession()->responseNotContains('Guide page 1');
 
     // Delete page.
     $pages[3]->delete();
     $this->drupalGet($overview->toUrl()->toString());
     $xpath = '//ul[@class="progress"]/li';
     $results = $this->xpath($xpath);
-    $this->assertEquals(2, count($results));
-    $this->assertNoText('Guide page 3');
+    $this->assertCount(2, $results);
+    $this->assertSession()->responseNotContains('Guide page 3');
   }
 
 }

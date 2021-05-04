@@ -46,7 +46,7 @@ class PagesIntegrationTest extends BrowserTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'localgov_core',
     'localgov_services_landing',
     'localgov_services_sublanding',
@@ -58,7 +58,7 @@ class PagesIntegrationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->adminUser = $this->drupalCreateUser(['bypass node access', 'administer nodes']);
