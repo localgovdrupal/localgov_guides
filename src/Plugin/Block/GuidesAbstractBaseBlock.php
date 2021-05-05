@@ -128,7 +128,7 @@ abstract class GuidesAbstractBaseBlock extends BlockBase implements ContainerFac
    * {@inheritdoc}
    */
   public function getCacheContexts() {
-    return Cache::mergeContexts(parent::getCacheContexts(), ['route']);
+    return Cache::mergeContexts(parent::getCacheContexts(), ['user', 'route']);
   }
 
   /**
