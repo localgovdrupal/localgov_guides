@@ -103,6 +103,10 @@ abstract class GuidesAbstractBaseBlock extends BlockBase implements ContainerFac
       }
 
       $this->guidePages = $this->overview->localgov_guides_pages->referencedEntities();
+      $this->guidePages = array_filter($this->guidePages, function ($guide_node) {
+        return ($guide_node instanceof NodeInterface) && $guide_node->access('view');
+      });
+      $this->guidePages = array_values($this->guidePages);
       $this->format = $this->overview->localgov_guides_list_format->value;
     }
   }
@@ -124,7 +128,7 @@ abstract class GuidesAbstractBaseBlock extends BlockBase implements ContainerFac
    * {@inheritdoc}
    */
   public function getCacheContexts() {
-    return Cache::mergeContexts(parent::getCacheContexts(), ['route']);
+    return Cache::mergeContexts(parent::getCacheContexts(), ['user', 'route']);
   }
 
   /**
