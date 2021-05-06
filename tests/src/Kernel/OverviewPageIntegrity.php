@@ -25,7 +25,7 @@ class OverviewPageIntegrity extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = [
+  protected static $modules = [
     'system',
     'field',
     'text',
@@ -48,7 +48,7 @@ class OverviewPageIntegrity extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setup();
 
     $this->installEntitySchema('user');
@@ -94,8 +94,8 @@ class OverviewPageIntegrity extends KernelTestBase {
     $storage->resetCache([$overviews[0]->id()]);
     $overviews[0] = $storage->load($overviews[0]->id());
     $child_pages = $overviews[0]->get('localgov_guides_pages')->getValue();
-    $this->assert(array_search(['target_id' => $pages[0]->id()], $child_pages) !== FALSE);
-    $this->assert(array_search(['target_id' => $pages[1]->id()], $child_pages) !== FALSE);
+    $this->assertTrue(array_search(['target_id' => $pages[0]->id()], $child_pages) !== FALSE);
+    $this->assertTrue(array_search(['target_id' => $pages[1]->id()], $child_pages) !== FALSE);
 
     // While the overview is 'open' remove one node and add another.
     $pages[1]->set('localgov_guides_parent', ['target_id' => $overviews[1]->id()]);
@@ -114,9 +114,9 @@ class OverviewPageIntegrity extends KernelTestBase {
     $storage->resetCache([$overviews[0]->id()]);
     $overviews[0] = $storage->load($overviews[0]->id());
     $child_pages = $overviews[0]->get('localgov_guides_pages')->getValue();
-    $this->assert(array_search(['target_id' => $pages[0]->id()], $child_pages) !== FALSE);
-    $this->assert(array_search(['target_id' => $pages[1]->id()], $child_pages) === FALSE);
-    $this->assert(array_search(['target_id' => $pages[2]->id()], $child_pages) !== FALSE);
+    $this->assertTrue(array_search(['target_id' => $pages[0]->id()], $child_pages) !== FALSE);
+    $this->assertTrue(array_search(['target_id' => $pages[1]->id()], $child_pages) === FALSE);
+    $this->assertTrue(array_search(['target_id' => $pages[2]->id()], $child_pages) !== FALSE);
   }
 
 }

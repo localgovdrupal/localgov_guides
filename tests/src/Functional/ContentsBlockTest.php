@@ -48,7 +48,7 @@ class ContentsBlockTest extends BrowserTestBase {
     $this->adminUser = $this->drupalCreateUser(['administer blocks']);
     $this->drupalLogin($this->adminUser);
     $this->drupalPlaceBlock('localgov_guides_contents');
-    $this->drupalLogout($this->adminUser);
+    $this->drupalLogout();
   }
 
   /**
@@ -75,16 +75,16 @@ class ContentsBlockTest extends BrowserTestBase {
     ]);
 
     $this->drupalGet('node');
-    $this->assertNoRaw('block-localgov-guides-contents');
+    $this->assertSession()->responseNotContains('block-localgov-guides-contents');
 
     $this->drupalGet($overview->toUrl()->toString());
-    $this->assertRaw('block-localgov-guides-contents');
+    $this->assertSession()->responseContains('block-localgov-guides-contents');
 
     $this->drupalGet($page->toUrl()->toString());
-    $this->assertRaw('block-localgov-guides-contents');
+    $this->assertSession()->responseContains('block-localgov-guides-contents');
 
     $this->drupalGet($orphan->toUrl()->toString());
-    $this->assertNoRaw('block-localgov-guides-contents');
+    $this->assertSession()->responseNotContains('block-localgov-guides-contents');
   }
 
   /**
