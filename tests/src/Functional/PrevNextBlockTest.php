@@ -126,21 +126,21 @@ class PrevNextBlockTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains('Prev');
     $this->assertSession()->responseContains($pages[0]->toUrl()->toString());
     $this->assertSession()->pageTextNotContains('Next');
+    // Republish for next tests.
+    $pages[1]->status = NodeInterface::PUBLISHED;
+    $pages[1]->save();
 
     // Check deleting page.
-    // Following test will fail because of reliance on deltas:
-    // https://github.com/localgovdrupal/localgov_guides/issues/6#issuecomment-644155487
-    // @codingStandardsIgnoreStart
-    // $pages[0]->delete();
-    // $this->drupalGet($overview->toUrl()->toString());
-    // $this->assertSession()->pageTextNotContains('Prev');
-    // $this->assertSession()->pageTextContains('Next');
-    // $this->assertSession()->responseContains($pages[1]->toUrl()->toString());
-    // $this->drupalGet($pages[1]->toUrl()->toString());
-    // $this->assertSession()->pageTextContains('Prev');
-    // $this->assertSession()->responseContains($overview->toUrl()->toString());
-    // $this->assertSession()->pageTextContains('Next');
-    // $this->assertSession()->responseContains($pages[2]->toUrl()->toString());
+    $pages[0]->delete();
+    $this->drupalGet($overview->toUrl()->toString());
+    $this->assertSession()->pageTextNotContains('Prev');
+    $this->assertSession()->pageTextContains('Next');
+    $this->assertSession()->responseContains($pages[1]->toUrl()->toString());
+    $this->drupalGet($pages[1]->toUrl()->toString());
+    $this->assertSession()->pageTextContains('Prev');
+    $this->assertSession()->responseContains($overview->toUrl()->toString());
+    $this->assertSession()->pageTextContains('Next');
+    $this->assertSession()->responseContains($pages[2]->toUrl()->toString());
   }
 
 }
