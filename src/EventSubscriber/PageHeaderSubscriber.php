@@ -7,7 +7,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\localgov_core\Event\PageHeaderDisplayEvent;
 
 /**
- * Class PageHeaderSubscriber.
+ * Set page title.
  *
  * @package Drupal\localgov_guides\EventSubscriber
  */

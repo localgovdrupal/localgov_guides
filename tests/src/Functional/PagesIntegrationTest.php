@@ -61,7 +61,10 @@ class PagesIntegrationTest extends BrowserTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->adminUser = $this->drupalCreateUser(['bypass node access', 'administer nodes']);
+    $this->adminUser = $this->drupalCreateUser([
+      'bypass node access',
+      'administer nodes',
+    ]);
     $this->nodeStorage = $this->container->get('entity_type.manager')->getStorage('node');
   }
 
@@ -109,7 +112,7 @@ class PagesIntegrationTest extends BrowserTestBase {
     $form->checkField('edit-status-value');
     $form->pressButton('edit-submit');
 
-    $this->assertText('Guide 1');
+    $this->assertSession()->pageTextContains('Guide 1');
     $trail = ['' => 'Home'];
     $trail += ['landing-page-1' => 'Landing Page 1'];
     $trail += ['landing-page-1/sublanding-1' => 'Sublanding 1'];
@@ -133,7 +136,7 @@ class PagesIntegrationTest extends BrowserTestBase {
     ]);
 
     $this->drupalGet('overview-1/page-1');
-    $this->assertText('Page 1');
+    $this->assertSession()->pageTextContains('Page 1');
     $trail = ['' => 'Home'];
     $trail += ['overview-1' => 'Overview 1'];
     $this->assertBreadcrumb(NULL, $trail);

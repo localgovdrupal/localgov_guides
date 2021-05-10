@@ -151,7 +151,10 @@ abstract class GuidesAbstractBaseBlock extends BlockBase implements ContainerFac
       return $cacheable_item->getCacheTags();
     }, $cacheable_items);
 
-    $merged_tags = array_reduce($list_of_tag_collections, [Cache::class, 'mergeTags'], []);
+    $merged_tags = array_reduce($list_of_tag_collections, [
+      Cache::class,
+      'mergeTags',
+    ], []);
     return $merged_tags;
   }
 
