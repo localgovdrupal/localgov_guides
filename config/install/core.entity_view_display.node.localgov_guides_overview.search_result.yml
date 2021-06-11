@@ -8,8 +8,6 @@ dependencies:
     - field.field.node.localgov_guides_overview.localgov_guides_list_format
     - field.field.node.localgov_guides_overview.localgov_guides_pages
     - field.field.node.localgov_guides_overview.localgov_guides_section_title
-    - field.field.node.localgov_guides_overview.localgov_services_parent
-    - field.field.node.localgov_guides_overview.localgov_topic_classified
     - node.type.localgov_guides_overview
   module:
     - text
