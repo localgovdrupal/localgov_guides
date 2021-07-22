@@ -8,34 +8,18 @@
 <nav class="cta">
   {% if format == 'ordered' %}
     <ol class="progress">
-  {% elseif format == 'unordered' %}
-    <ul class="progress">
-  {% elseif format == 'dashes' %}
-    <ul class="guide-dashes">
   {% else %}
     <ul class="progress">
   {% endif %}
     {% for link in links %}
-      {% if format == 'dashes' %}
-        {% if link.url.options.attributes.class == 'active' %}
-          <li> {{ link.text }} </li>
-        {% else %}
-          <li> {{ link }} </li>
-        {% endif %}
+      {% if link.url.options.attributes.class == 'active' %}
+        <li><span aria-current="page" class="progress--step progress--active"></span> {{ link.text }} </li>
       {% else %}
-        {% if link.url.options.attributes.class == 'active' %}
-          <li><span aria-current="page" class="progress--step progress--active"></span> {{ link.text }} </li>
-        {% else %}
-          <li><span class="progress--step"></span> {{ link }} </li>
-        {% endif %}
+        <li><span class="progress--step"></span> {{ link }} </li>
       {% endif %}
     {% endfor %}
   {% if format == 'ordered' %}
     </ol>
-  {% elseif format == 'unordered' %}
-    </ul>
-  {% elseif format == 'dashes' %}
-    </ul>
   {% else %}
     </ul>
   {% endif %}

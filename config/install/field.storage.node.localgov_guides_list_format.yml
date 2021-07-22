@@ -16,9 +16,6 @@ settings:
     -
       value: ordered
       label: 'Progress: Numbers'
-    -
-      value: dashes
-      label: 'List: Dashes'
   allowed_values_function: ''
 module: options
 locked: false
