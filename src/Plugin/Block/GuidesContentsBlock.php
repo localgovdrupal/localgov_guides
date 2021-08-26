@@ -2,7 +2,6 @@
 
 namespace Drupal\localgov_guides\Plugin\Block;
 
-use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
@@ -15,7 +14,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
  *   admin_label = "Guide contents"
  * )
  */
-class GuidesContentsBlock extends GuidesAbstractBaseBlock implements ContainerInjectionInterface {
+class GuidesContentsBlock extends GuidesAbstractBaseBlock {
 
   use StringTranslationTrait;
 
