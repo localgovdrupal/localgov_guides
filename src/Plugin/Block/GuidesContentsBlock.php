@@ -2,6 +2,9 @@
 
 namespace Drupal\localgov_guides\Plugin\Block;
 
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+
 /**
  * Guide contents block.
  *
@@ -12,7 +15,9 @@ namespace Drupal\localgov_guides\Plugin\Block;
  *   admin_label = "Guide contents"
  * )
  */
-class GuidesContentsBlock extends GuidesAbstractBaseBlock {
+class GuidesContentsBlock extends GuidesAbstractBaseBlock implements ContainerInjectionInterface {
+
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -20,11 +25,23 @@ class GuidesContentsBlock extends GuidesAbstractBaseBlock {
   public function build() {
     $this->setPages();
     $links = [];
+    $overviewOptions = [];
 
-    $options = $this->node->id() == $this->overview->id() ? ['attributes' => ['class' => 'active']] : [];
-    $links[] = $this->overview->toLink($this->overview->localgov_guides_section_title->value, 'canonical', $options);
+    if ($this->node->id() == $this->overview->id()) {
+      $overviewOptions = ['attributes' => ['class' => 'active']];
+      if (!$this->node->isPublished()) {
+        $this->overview->localgov_guides_section_title->value .= ' ' . $this->t('(Unpublished)');
+        $overviewOptions['attributes']['class'] = trim($overviewOptions['attributes']['class'] . ' unpublished');
+      }
+    }
+    $links[] = $this->overview->toLink($this->overview->localgov_guides_section_title->value, 'canonical', $overviewOptions);
+
     foreach ($this->guidePages as $guide_node) {
       $options = $this->node->id() == $guide_node->id() ? ['attributes' => ['class' => 'active']] : [];
+      if (!$guide_node->isPublished()) {
+        $guide_node->localgov_guides_section_title->value .= ' ' . $this->t('(Unpublished)');
+        $options['attributes']['class'] = trim($options['attributes']['class'] . ' unpublished');
+      }
       $links[] = $guide_node->toLink($guide_node->localgov_guides_section_title->value, 'canonical', $options);
     }
 
