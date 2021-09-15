@@ -12,12 +12,5 @@
     "localgovdrupal/localgov_services": "^2.0",
     "localgovdrupal/localgov_topics": "^1.0",
     "drupal/pathauto": "^1.6"
-  },
-  "extra": {
-    "patches": {
-      "drupal/core": {
-        "Users can't reference unpublished content even when they have access to it": "https://www.drupal.org/files/issues/2021-06-09/2845144_52.patch"
-      }
-    }
   }
 }
