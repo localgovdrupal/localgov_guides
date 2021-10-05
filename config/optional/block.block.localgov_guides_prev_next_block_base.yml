@@ -5,7 +5,7 @@ dependencies:
     - localgov_guides
   theme:
     - localgov_base
-id: localgov_guides_prev_next_block
+id: localgov_guides_prev_next_block_base
 theme: localgov_base
 region: content_bottom
 weight: -6
