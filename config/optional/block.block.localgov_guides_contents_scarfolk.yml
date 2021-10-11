@@ -4,9 +4,9 @@ dependencies:
   module:
     - localgov_guides
   theme:
-    - localgov_theme
-id: localgov_guides_contents
-theme: localgov_theme
+    - localgov_scarfolk
+id: localgov_guides_contents_scarfolk
+theme: localgov_scarfolk
 region: content_top
 weight: 0
 provider: null
