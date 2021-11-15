@@ -28,6 +28,11 @@ class PagesIntegrationTest extends BrowserTestBase {
   protected $profile = 'standard';
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stable';
+
+  /**
    * A user with permission to bypass content access checks.
    *
    * @var \Drupal\user\UserInterface
@@ -60,7 +65,7 @@ class PagesIntegrationTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-
+    $this->drupalPlaceBlock('system_breadcrumb_block');
     $this->adminUser = $this->drupalCreateUser([
       'bypass node access',
       'administer nodes',
