@@ -48,9 +48,11 @@ class ChildParentRelationship implements ContainerInjectionInterface {
    *   Overview node to have child references checked.
    */
   public function overviewPagesCheck(NodeInterface $node) {
-    $query = $this->entityTypeManager->getStorage('node')->getQuery();
-    $query->condition('type', 'localgov_guides_page');
-    $query->condition('localgov_guides_parent', $node->id());
+    $query = $this->entityTypeManager->getStorage('node')
+      ->getQuery()
+      ->condition('type', 'localgov_guides_page')
+      ->condition('localgov_guides_parent', $node->id())
+      ->accessCheck(TRUE);
     $actual_children = $query->execute();
     $linked_children = array_column($node->localgov_guides_pages->getValue(), 'target_id');
     $missing_children = array_diff($actual_children, $linked_children);
