@@ -28,7 +28,7 @@ class GuidesPrevNextBlock extends GuidesAbstractBaseBlock {
     }
 
     if ($this->node->bundle() == 'localgov_guides_page') {
-      $page_delta = array_search($this->node, $this->guidePages);
+      $page_delta = array_search($this->node, $this->guidePages, TRUE);
       if (!empty($this->guidePages[$page_delta - 1])) {
         $previous_url = $this->guidePages[$page_delta - 1]->toUrl();
         $previous_title = $this->guidePages[$page_delta - 1]->title->value;
