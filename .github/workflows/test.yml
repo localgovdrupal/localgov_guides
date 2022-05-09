@@ -34,7 +34,7 @@ jobs:
 
     steps:
 
-      - run: echo ${{ github }}
+      - run: echo ${{ toJSON(github) }}
 
       - name: Save git branch and git repo names to env if this is not a pull request
         if: github.event_name != 'pull_request'
