@@ -14,7 +14,7 @@ on:
 env:
   LOCALGOV_DRUPAL_PROJECT: localgovdrupal/localgov_guides
   LOCALGOV_DRUPAL_PROJECT_PATH: web/modules/contrib/localgov_guides
-  VARS: ${{ toJSON(github) }}
+  VARS: ${{ toJSON(job) }}
 
 jobs:
 
