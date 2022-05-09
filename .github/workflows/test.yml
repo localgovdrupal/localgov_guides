@@ -45,7 +45,7 @@ jobs:
         run: |
           echo "GIT_BASE=${GITHUB_BASE_REF}" >> $GITHUB_ENV
           echo "GIT_BRANCH=${GITHUB_HEAD_REF}" >> $GITHUB_ENV
-          HEAD_USER=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/localgovdrupal/localgov_guides/pulls/${{ github.event.number }} | jq ".head.user.login")
+          HEAD_USER=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/localgovdrupal/localgov_guides/pulls/${{ github.event.number }} | jq -r ".head.user.login")
           if [[ "${HEAD_USER}" != "localgovdrupal" ]]; then echo "LOCALGOV_DRUPAL_PROJECT=${LOCALGOV_DRUPAL_PROJECT/localgovdrupal/$HEAD_USER}" >> $GITHUB_ENV; fi
 
       - name: Set composer branch reference for version branches
