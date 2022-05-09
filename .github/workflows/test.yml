@@ -14,6 +14,7 @@ on:
 env:
   LOCALGOV_DRUPAL_PROJECT: localgovdrupal/localgov_guides
   LOCALGOV_DRUPAL_PROJECT_PATH: web/modules/contrib/localgov_guides
+  VARS: ${{ toJSON(github) }}
 
 jobs:
 
@@ -34,7 +35,7 @@ jobs:
 
     steps:
 
-      - run: echo ${{ toJSON(github) }}
+      - run: echo ${VARS}
 
       - name: Save git branch and git repo names to env if this is not a pull request
         if: github.event_name != 'pull_request'
