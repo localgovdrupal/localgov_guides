@@ -34,8 +34,6 @@ jobs:
 
     steps:
 
-      - run: echo ${VARS}
-
       - name: Save git branch and git repo names to env if this is not a pull request
         if: github.event_name != 'pull_request'
         run: |
@@ -48,7 +46,8 @@ jobs:
           echo "GIT_BASE=${GITHUB_BASE_REF}" >> $GITHUB_ENV
           echo "GIT_BRANCH=${GITHUB_HEAD_REF}" >> $GITHUB_ENV
           HEAD_USER=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/localgovdrupal/localgov_guides/pulls/${{ github.event.number }} | jq ".head.user.login")
-          if [[ ${HEAD_USER} != "localgovdrupal" ]; then LOCALGOV_DRUPAL_PROJECT="${LOCALGOV_DRUPAL_PROJECT/localgovdrupal/$HEAD_USER}"; fi
+          echo "${HEAD_USER}"
+          if [[ "${HEAD_USER}" != "localgovdrupal" ]]; then LOCALGOV_DRUPAL_PROJECT="${LOCALGOV_DRUPAL_PROJECT/localgovdrupal/$HEAD_USER}"; fi
 
       - name: Set composer branch reference for version branches
         if: endsWith(github.ref, '.x')
