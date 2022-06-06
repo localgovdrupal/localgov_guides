@@ -24,6 +24,11 @@ class GuidePagesTest extends BrowserTestBase {
   protected $profile = 'standard';
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'stable';
+
+  /**
    * A user with permission to bypass content access checks.
    *
    * @var \Drupal\user\UserInterface
