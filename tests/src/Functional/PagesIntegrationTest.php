@@ -189,4 +189,5 @@ class PagesIntegrationTest extends BrowserTestBase {
     $this->assertSession()->responseContains('<strong>certainly</strong>');
     $this->assertSession()->responseContains('<strong>question</strong>');
   }
+
 }
