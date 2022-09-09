@@ -8,6 +8,7 @@ use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
+use Drupal\Tests\Traits\Core\CronRunTrait;
 
 /**
  * Tests pages working together with pathauto, services and topics.
@@ -19,6 +20,7 @@ class PagesIntegrationTest extends BrowserTestBase {
   use NodeCreationTrait;
   use AssertBreadcrumbTrait;
   use TaxonomyTestTrait;
+  use CronRunTrait;
 
   /**
    * Test breadcrumbs in the Standard profile.
@@ -58,6 +60,8 @@ class PagesIntegrationTest extends BrowserTestBase {
     'localgov_services_navigation',
     'localgov_topics',
     'localgov_guides',
+    'localgov_search',
+    'localgov_search_db',
   ];
 
   /**
@@ -145,6 +149,45 @@ class PagesIntegrationTest extends BrowserTestBase {
     $trail = ['' => 'Home'];
     $trail += ['overview-1' => 'Overview 1'];
     $this->assertBreadcrumb(NULL, $trail);
+  }
+
+  /**
+   * LocalGov Search integration.
+   */
+  public function testLocalgovSearch() {
+    $title_1 = 'Test Overview Page';
+    $body_1 = [
+      'value' => 'Science is the search for truth, that is the effort to understand the world: it involves the rejection of bias, of dogma, of revelation, but not the rejection of morality.',
+      'summary' => 'One of the greatest joys known to man is to take a flight into ignorance in search of knowledge.',
+    ];
+    $this->createNode([
+      'title' => $title_1,
+      'body' => $body_1,
+      'type' => 'localgov_guides_overview',
+      'status' => NodeInterface::PUBLISHED,
+    ]);
+    $title_2 = 'Test Guide Page';
+    $body_2 = [
+      'value' => 'Truth, I have learned, differs for everybody. Just as no two people ever see a rainbow in exactly the same place - and yet both most certainly see it, while the person seemingly standing right underneath it does not see it at all - so truth is a question of where one stands, and the direction one is looking in at the time.',
+      'summary' => 'One of the greatest joys known to man is to take a flight into ignorance in search of knowledge.',
+    ];
+    $this->createNode([
+      'title' => $title_2,
+      'body' => $body_2,
+      'type' => 'localgov_guides_page',
+      'status' => NodeInterface::PUBLISHED,
+    ]);
+    $this->cronRun();
+    $this->drupalGet('search', ['query' => ['s' => 'bias+dogma+revelation']]);
+    $this->assertSession()->pageTextContains($title_1);
+    $this->assertSession()->responseContains('<strong>bias</strong>');
+    $this->assertSession()->responseContains('<strong>dogma</strong>');
+    $this->assertSession()->responseContains('<strong>revelation</strong>');
+    $this->drupalGet('search', ['query' => ['s' => 'truth+certainly+question']]);
+    $this->assertSession()->pageTextContains($title_2);
+    $this->assertSession()->responseContains('<strong>truth</strong>');
+    $this->assertSession()->responseContains('<strong>certainly</strong>');
+    $this->assertSession()->responseContains('<strong>question</strong>');
   }
 
 }
