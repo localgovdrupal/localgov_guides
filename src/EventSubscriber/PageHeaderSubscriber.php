@@ -2,6 +2,7 @@
 
 namespace Drupal\localgov_guides\EventSubscriber;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\node\Entity\Node;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\localgov_core\Event\PageHeaderDisplayEvent;
@@ -26,25 +27,31 @@ class PageHeaderSubscriber implements EventSubscriberInterface {
    * Set page title and lede.
    */
   public function setPageHeader(PageHeaderDisplayEvent $event) {
-    if ($event->getEntity() instanceof Node &&
-      $event->getEntity()->bundle() == 'localgov_guides_page' &&
-      $event->getEntity()->localgov_guides_parent->entity
-    ) {
-      $overview = $event->getEntity()->localgov_guides_parent->entity;
-      if (!empty($overview)) {
-        $event->setTitle($overview->getTitle());
-        if ($overview->get('body')->summary) {
-          $event->setLede([
-            '#type' => 'html_tag',
-            '#tag' => 'p',
-            '#value' => $overview->get('body')->summary,
-          ]);
-        }
+
+    $node = $event->getEntity();
+
+    if (!$node instanceof Node) {
+      return;
+    }
+
+    if ($node->bundle() !== 'localgov_guides_page') {
+      return;
+    }
+
+    $overview = $node->localgov_guides_parent->entity;
+    if (!empty($overview)) {
+      $event->setTitle($overview->getTitle());
+      if ($overview->get('body')->summary) {
+        $event->setLede([
+          '#type' => 'html_tag',
+          '#tag' => 'p',
+          '#value' => $overview->get('body')->summary,
+        ]);
       }
-      else {
-        $event->setLede('');
-      }
+      $event->setCacheTags(Cache::mergeTags($node->getCacheTags(), $overview->getCacheTags()));
+    }
+    else {
+      $event->setLede('');
     }
   }
-
 }
