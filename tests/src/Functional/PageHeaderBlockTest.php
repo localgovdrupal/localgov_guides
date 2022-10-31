@@ -90,6 +90,14 @@ class PageHeaderBlockTest extends BrowserTestBase {
     $this->drupalGet($orphan->toUrl()->toString());
     $this->assertSession()->responseNotContains('<h1 class="header">' . $overview_title . '</h1>');
     $this->assertSession()->responseContains('<h1 class="header">' . $orphan_title . '</h1>');
+
+    $new_overview_title = 'Guide overview - ' . $this->randomMachineName(8);
+    $overview->set('title', $new_overview_title);
+    $overview->save();
+
+    $this->drupalGet($page->toUrl()->toString());
+    $this->assertSession()->responseNotContains($overview_title);
+    $this->assertSession()->responseContains('<h1 class="header">' . $new_overview_title . '</h1>');
   }
 
 }
