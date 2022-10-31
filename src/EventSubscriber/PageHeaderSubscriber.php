@@ -54,4 +54,5 @@ class PageHeaderSubscriber implements EventSubscriberInterface {
       $event->setLede('');
     }
   }
+
 }
