@@ -6,7 +6,7 @@
   "license": "GPL-2.0-or-later",
   "minimum-stability": "dev",
   "require": {
-    "localgovdrupal/localgov_core": "^2.1"
+    "localgovdrupal/localgov_core": "dev-feature/drupal-10 as 2.2.0"
   },
   "require-dev": {
     "localgovdrupal/localgov_services": "^2.0",
