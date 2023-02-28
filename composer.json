@@ -9,8 +9,8 @@
     "localgovdrupal/localgov_core": "dev-feature/drupal-10 as 2.2.0"
   },
   "require-dev": {
-    "localgovdrupal/localgov_services": "^2.0",
-    "localgovdrupal/localgov_topics": "^1.0",
+    "localgovdrupal/localgov_services": "dev-feature/drupal-10 as 2.1.0",
+    "localgovdrupal/localgov_topics": "dev-feature/drupal-10 as 1.1.0",
     "drupal/pathauto": "^1.6"
   }
 }
