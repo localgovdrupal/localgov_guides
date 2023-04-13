@@ -49,7 +49,7 @@ class ContentsBlockTest extends BrowserTestBase {
     $this->adminUser = $this->drupalCreateUser(['administer blocks']);
     $this->drupalLogin($this->adminUser);
     $this->drupalPlaceBlock('localgov_guides_contents');
-    //$this->drupalLogout();
+    $this->drupalLogout();
   }
 
   /**
