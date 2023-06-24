@@ -194,6 +194,25 @@ function localgov_guides_modules_installed($modules) {
 }
 
 /**
+ * Implements hook_preprocess_node().
+ *
+ * Sets the Guide overview page title.  Adds the guide_overview_title
+ * template variable.
+ */
+function localgov_guides_preprocess_node__localgov_guides_overview__full(&$vars) {
+
+  $guide_overview_node = $vars['node'];
+  $guide_overview_default_title = t('Overview');
+  $guide_overview_title = '';
+
+  if ($guide_overview_node->hasField('localgov_guides_section_title') && !$guide_overview_node->localgov_guides_section_title->isEmpty()) {
+    $guide_overview_title = $guide_overview_node->localgov_guides_section_title->value;
+  };
+
+  $vars['guide_overview_title'] = $guide_overview_title ?: $guide_overview_default_title;
+}
+
+/**
  * Set form settings for optional services and topic fields on installation.
  *
  * @param bool $services
