@@ -2,6 +2,9 @@
 
 namespace Drupal\localgov_guides\Plugin\Block;
 
+use Drupal\block\Entity\Block;
+use Drupal\Core\Form\FormStateInterface;
+
 /**
  * Provides a 'GuidesPrevNextBlock' block.
  *
@@ -21,6 +24,7 @@ class GuidesPrevNextBlock extends GuidesAbstractBaseBlock {
     $previous_title = '';
     $next_url = '';
     $next_title = '';
+    $show_title = '';
 
     if ($this->node->bundle() == 'localgov_guides_overview' and count($this->guidePages) > 0) {
       $next_url = $this->guidePages[0]->toUrl();
@@ -50,9 +54,42 @@ class GuidesPrevNextBlock extends GuidesAbstractBaseBlock {
       '#previous_title' => $previous_title,
       '#next_url' => $next_url,
       '#next_title' => $next_title,
+      '#show_title' => $this->configuration['show_title'],
     ];
 
     return $build;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildConfigurationForm(array $form,FormStateInterface $form_state){
+    $form['show_title'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Show guide title'),
+      '#default_value' => $this->configuration['show_title']
+    ];
+
+    return parent::buildConfigurationForm($form,$form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form,FormStateInterface $form_state){
+    parent::blockSubmit($form, $form_state);
+
+    $values = $form_state->getValues();
+    $this->configuration['show_title'] = $values['show_title'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration(){
+    return [
+      'show_title' => FALSE,
+    ];
   }
 
 }
