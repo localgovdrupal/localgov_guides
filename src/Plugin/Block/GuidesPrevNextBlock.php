@@ -23,7 +23,6 @@ class GuidesPrevNextBlock extends GuidesAbstractBaseBlock {
     $previous_title = '';
     $next_url = '';
     $next_title = '';
-    $show_title = '';
 
     if ($this->node->bundle() == 'localgov_guides_overview' and count($this->guidePages) > 0) {
       $next_url = $this->guidePages[0]->toUrl();
@@ -62,11 +61,11 @@ class GuidesPrevNextBlock extends GuidesAbstractBaseBlock {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state){
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['show_title'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Show guide title'),
-      '#default_value' => $this->configuration['show_title']
+      '#default_value' => $this->configuration['show_title'],
     ];
 
     return parent::buildConfigurationForm($form,$form_state);
@@ -75,7 +74,7 @@ class GuidesPrevNextBlock extends GuidesAbstractBaseBlock {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state){
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     parent::blockSubmit($form, $form_state);
 
     $values = $form_state->getValues();
@@ -85,7 +84,7 @@ class GuidesPrevNextBlock extends GuidesAbstractBaseBlock {
   /**
    * {@inheritdoc}
    */
-  public function defaultConfiguration(){
+  public function defaultConfiguration() {
     return [
       'show_title' => FALSE,
     ];
