@@ -1,1 +1,7 @@
-block.settings.localgov_guides_prev_next_block_base:&#10  type: block_settings&#10  label: 'Previous Next button block settings'&#10  mapping:&#10    setting:&#10      type: boolean&#10      label: 'Show title'&#10
+block.settings.localgov_guides_prev_next_block_base:
+  type: block_settings
+  label: 'Previous Next button block settings'
+  mapping:
+    show_title:
+      type: boolean
+      label: 'Show title'
