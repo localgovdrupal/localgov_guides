@@ -2,7 +2,6 @@
 
 namespace Drupal\localgov_guides\Plugin\Block;
 
-use Drupal\block\Entity\Block;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -63,7 +62,7 @@ class GuidesPrevNextBlock extends GuidesAbstractBaseBlock {
   /**
    * {@inheritdoc}
    */
-  public function buildConfigurationForm(array $form,FormStateInterface $form_state){
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state){
     $form['show_title'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Show guide title'),
@@ -76,7 +75,7 @@ class GuidesPrevNextBlock extends GuidesAbstractBaseBlock {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form,FormStateInterface $form_state){
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state){
     parent::blockSubmit($form, $form_state);
 
     $values = $form_state->getValues();
