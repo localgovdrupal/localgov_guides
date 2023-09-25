@@ -50,6 +50,20 @@ abstract class GuidesAbstractBaseBlock extends BlockBase implements ContainerFac
   protected $format = '';
 
   /**
+   * Entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Current route object.
+   *
+   * @var \Drupal\Core\Routing\ResettableStackedRouteMatchInterface
+   */
+  protected $routeMatch;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
