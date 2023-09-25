@@ -68,7 +68,7 @@ class GuidesPrevNextBlock extends GuidesAbstractBaseBlock {
       '#default_value' => $this->configuration['show_title'],
     ];
 
-    return parent::buildConfigurationForm($form,$form_state);
+    return parent::buildConfigurationForm($form, $form_state);
   }
 
   /**
