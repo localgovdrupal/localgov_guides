@@ -3,5 +3,5 @@ block.settings.localgov_guides_prev_next_block_base:
   label: 'Previous Next button block settings'
   mapping:
     show_title:
-      type: boolean
+      type: string
       label: 'Show title'
