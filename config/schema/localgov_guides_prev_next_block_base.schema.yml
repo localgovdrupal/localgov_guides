@@ -1,0 +1,7 @@
+block.settings.localgov_guides_prev_next_block:
+  type: block_settings
+  label: 'Previous Next button block settings'
+  mapping:
+    show_title:
+      type: boolean
+      label: 'Show title'
