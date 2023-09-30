@@ -38,7 +38,7 @@ class PageHeaderSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    $overview = $node->localgov_guides_parent->entity ?? null;
+    $overview = $node->localgov_guides_parent->entity ?? NULL;
     if (!empty($overview)) {
       $event->setTitle($overview->getTitle());
       if ($overview->get('body')->summary) {
