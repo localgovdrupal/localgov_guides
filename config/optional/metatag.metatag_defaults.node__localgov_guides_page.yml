@@ -1,0 +1,12 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - metatag
+  enforced:
+    module:
+      - localgov_guides
+id: node__localgov_guides_page
+label: 'Content: Guide page'
+tags:
+  title: '[node:title] | [node:localgov_guides_parent] | [site:name]'
