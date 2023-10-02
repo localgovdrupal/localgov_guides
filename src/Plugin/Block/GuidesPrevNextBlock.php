@@ -24,7 +24,7 @@ class GuidesPrevNextBlock extends GuidesAbstractBaseBlock {
     $next_url = '';
     $next_title = '';
 
-    if ($this->node->bundle() == 'localgov_guides_overview' and count($this->guidePages) > 0) {
+    if ($this->node->bundle() == 'localgov_guides_overview' && count($this->guidePages) > 0) {
       $next_url = $this->guidePages[0]->toUrl();
       $next_title = $this->guidePages[0]->localgov_guides_section_title->value;
     }
