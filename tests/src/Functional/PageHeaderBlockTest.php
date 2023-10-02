@@ -48,7 +48,7 @@ class PageHeaderBlockTest extends BrowserTestBase {
     $this->adminUser = $this->drupalCreateUser(['administer blocks']);
     $this->drupalLogin($this->adminUser);
     $this->drupalPlaceBlock('localgov_page_header_block');
-    $this->drupalLogout($this->adminUser);
+    $this->drupalLogout();
   }
 
   /**

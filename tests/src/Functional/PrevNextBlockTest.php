@@ -48,7 +48,7 @@ class PrevNextBlockTest extends BrowserTestBase {
     $this->adminUser = $this->drupalCreateUser(['administer blocks']);
     $this->drupalLogin($this->adminUser);
     $this->drupalPlaceBlock('localgov_guides_prev_next_block');
-    $this->drupalLogout($this->adminUser);
+    $this->drupalLogout();
   }
 
   /**
