@@ -15,6 +15,18 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class PageHeaderSubscriber implements EventSubscriberInterface {
 
   /**
+   * @var Drupal\Core\Config\ImmutableConfig
+   */
+  protected $settings;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct($config_factory) {
+    $this->settings = $config_factory->get('localgov_guides.settings');
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
@@ -39,37 +51,37 @@ class PageHeaderSubscriber implements EventSubscriberInterface {
     }
 
     $overview = $node->localgov_guides_parent->entity ?? NULL;
-    if (!empty($overview)) {
-      $event->setTitle([
-        // Replace direct call to getTitle() with an inline Twig template. With
-        // this, we can provide the node and overview info to the header block
-        // template.
-        '#type' => 'inline_template',
-        '#template' => '{{ title }}',
-        '#context' => [
-          'title' => $overview->getTitle(),
-          'node' => $node,
-          'overview' => $overview,
-        ],
-      ]);
-      if ($overview->get('body')->summary) {
-        $event->setLede([
-          // localgov_drupal/localgov_base uses this render array's '#value'
-          // property directly, so we can't remove it. But we can provide extra
-          // data to templates in the contents of guide_data.
-          '#type' => 'html_tag',
-          '#tag' => 'p',
-          '#value' => $overview->get('body')->summary,
-          'guide_data' => [
-            '#node' => $node,
-            '#overview' => $overview,
-          ],
-        ]);
+    if ($this->settings->get('legacy_header')) {
+      // The legacy rendering uses overview content for Guide Page titles.
+      if (!empty($overview)) {
+        $event->setTitle($overview->getTitle());
+        if ($overview->get('body')->summary) {
+          $event->setLede([
+            '#type' => 'html_tag',
+            '#tag' => 'p',
+            '#value' => $overview->get('body')->summary,
+          ]);
+        }
+        $event->setCacheTags(Cache::mergeTags($node->getCacheTags(), $overview->getCacheTags()));
       }
-      $event->setCacheTags(Cache::mergeTags($node->getCacheTags(), $overview->getCacheTags()));
+      else {
+        $event->setLede('');
+      }
     }
     else {
-      $event->setLede('');
+      // The newer rendering uses the node's own content for Guide page titles.
+      $event->setTitle([
+        '#theme' => 'guides_page_header_title',
+        '#title' => $node->getTitle(),
+        '#node' => $node,
+        '#overview' => $overview,
+      ]);
+      $event->setLede([
+        '#theme' => 'guides_page_header_lede',
+        '#lede' => $overview->getTitle(),
+        '#node' => $node,
+        '#overview' => $overview,
+      ]);
     }
   }
 
