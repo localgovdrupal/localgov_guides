@@ -19,13 +19,13 @@ class PageHeaderSubscriber implements EventSubscriberInterface {
    *
    * @var Drupal\Core\Config\ImmutableConfig
    */
-  protected $config_factory;
+  protected $configFactory;
 
   /**
    * {@inheritdoc}
    */
   public function __construct($config_factory) {
-    $this->config_factory = $config_factory;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -53,7 +53,7 @@ class PageHeaderSubscriber implements EventSubscriberInterface {
     }
 
     $overview = $node->localgov_guides_parent->entity ?? NULL;
-    if (!$this->config_factory->get('localgov_guides.settings')->get('modern_header')) {
+    if (!$this->configFactory->get('localgov_guides.settings')->get('modern_header')) {
       // The legacy rendering uses overview content for Guide Page titles.
       if (!empty($overview)) {
         $event->setTitle($overview->getTitle());
