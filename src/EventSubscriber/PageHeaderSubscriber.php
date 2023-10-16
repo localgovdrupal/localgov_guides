@@ -15,6 +15,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class PageHeaderSubscriber implements EventSubscriberInterface {
 
   /**
+   * The config.factory service.
+   *
    * @var Drupal\Core\Config\ImmutableConfig
    */
   protected $settings;
