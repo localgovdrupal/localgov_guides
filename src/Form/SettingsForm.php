@@ -28,11 +28,11 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $form['legacy_header'] = [
+    $form['modern_header'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Use legacy header block on Guide pages'),
-      '#description' => $this->t('When checked, Localgov Guide pages will use legacy render arrays for the header block title and lede.'),
-      '#default_value' => $this->config('localgov_guides.settings')->get('legacy_header') ?? TRUE,
+      '#title' => $this->t('Use "modern" header block on Guide pages'),
+      '#description' => $this->t('When checked, Localgov Guide pages will use modern Twig-based render arrays for the header block title and lede.'),
+      '#default_value' => (bool) $this->config('localgov_guides.settings')->get('modern_header'),
     ];
     return parent::buildForm($form, $form_state);
   }
@@ -42,7 +42,7 @@ class SettingsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('localgov_guides.settings')
-      ->set('legacy_header', $form_state->getValue('legacy_header'))
+      ->set('modern_header', $form_state->getValue('modern_header'))
       ->save();
     parent::submitForm($form, $form_state);
   }
