@@ -53,7 +53,7 @@ class PageHeaderSubscriber implements EventSubscriberInterface {
     }
 
     $overview = $node->localgov_guides_parent->entity ?? NULL;
-    if ($this->settings->get('legacy_header')) {
+    if (!$this->settings->get('modern_header')) {
       // The legacy rendering uses overview content for Guide Page titles.
       if (!empty($overview)) {
         $event->setTitle($overview->getTitle());
