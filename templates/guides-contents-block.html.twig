@@ -12,7 +12,7 @@
     <ul class="progress">
   {% endif %}
     {% for link in links %}
-      {% if link.url.options.attributes.class == 'active' %}
+      {% if 'active' in link.url.options.attributes.class %}
         <li><span aria-current="page" class="progress--step progress--active"></span> {{ link.text }} </li>
       {% else %}
         <li><span class="progress--step"></span> {{ link }} </li>
