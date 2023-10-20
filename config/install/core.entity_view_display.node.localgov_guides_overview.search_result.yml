@@ -4,7 +4,6 @@ dependencies:
   config:
     - core.entity_view_mode.node.search_result
     - field.field.node.localgov_guides_overview.body
-    - field.field.node.localgov_guides_overview.localgov_guides_description
     - field.field.node.localgov_guides_overview.localgov_guides_list_format
     - field.field.node.localgov_guides_overview.localgov_guides_pages
     - field.field.node.localgov_guides_overview.localgov_guides_section_title
@@ -24,9 +23,6 @@ content:
 hidden:
   body: true
   links: true
-  localgov_guides_description: true
   localgov_guides_list_format: true
   localgov_guides_pages: true
   localgov_guides_section_title: true
-  localgov_services_parent: true
-  localgov_topic_classified: true
