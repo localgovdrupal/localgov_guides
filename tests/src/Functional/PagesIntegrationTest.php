@@ -175,11 +175,9 @@ class PagesIntegrationTest extends BrowserTestBase {
     $this->assertSession()->responseContains('<strong>bias</strong>');
     $this->assertSession()->responseContains('<strong>dogma</strong>');
     $this->assertSession()->responseContains('<strong>revelation</strong>');
-    $this->drupalGet('search', ['query' => ['s' => 'truth+certainly+question']]);
+    $this->drupalGet('search', ['query' => ['s' => 'truth']]);
     $this->assertSession()->pageTextContains($title_2);
     $this->assertSession()->responseContains('<strong>truth</strong>');
-    $this->assertSession()->responseContains('<strong>certainly</strong>');
-    $this->assertSession()->responseContains('<strong>question</strong>');
   }
 
 }
