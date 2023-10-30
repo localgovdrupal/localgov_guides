@@ -4,7 +4,6 @@ dependencies:
   config:
     - core.entity_view_mode.node.search_index
     - field.field.node.localgov_guides_overview.body
-    - field.field.node.localgov_guides_overview.localgov_guides_description
     - field.field.node.localgov_guides_overview.localgov_guides_list_format
     - field.field.node.localgov_guides_overview.localgov_guides_pages
     - field.field.node.localgov_guides_overview.localgov_guides_section_title
@@ -18,51 +17,28 @@ bundle: localgov_guides_overview
 mode: search_index
 content:
   body:
-    label: hidden
     type: text_default
-    weight: 0
-    settings: {  }
-    third_party_settings: {  }
-    region: content
-  localgov_guides_description:
-    type: basic_string
-    weight: 1
-    region: content
     label: hidden
     settings: {  }
     third_party_settings: {  }
+    weight: 0
+    region: content
   localgov_guides_pages:
     type: entity_reference_label
-    weight: 2
-    region: content
     label: hidden
     settings:
       link: true
     third_party_settings: {  }
+    weight: 2
+    region: content
   localgov_guides_section_title:
     type: string
-    weight: 3
-    region: content
     label: hidden
     settings:
       link_to_entity: false
     third_party_settings: {  }
-  localgov_services_parent:
-    type: entity_reference_label
-    weight: 4
+    weight: 3
     region: content
-    label: hidden
-    settings:
-      link: true
-    third_party_settings: {  }
-  localgov_topic_classified:
-    type: entity_reference_label
-    weight: 5
-    region: content
-    label: hidden
-    settings:
-      link: true
-    third_party_settings: {  }
 hidden:
   links: true
   localgov_guides_list_format: true
