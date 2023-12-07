@@ -81,15 +81,21 @@ class PageHeaderBlockTest extends BrowserTestBase {
     ]);
 
     $this->drupalGet($overview->toUrl()->toString());
-    $this->assertSession()->responseContains('<h1 class="header">' . $overview_title . '</h1>');
+    $query = $this->xpath('.//h1[contains(concat(" ",normalize-space(@class)," ")," header ")]');
+    $found_title = $query[0]->getText();
+    $this->assertEquals($found_title, $overview_title);
 
     $this->drupalGet($page->toUrl()->toString());
-    $this->assertSession()->responseContains('<h1 class="header">' . $overview_title . '</h1>');
-    $this->assertSession()->responseNotContains('<h1 class="header">' . $page_title . '</h1>');
+    $query = $this->xpath('.//h1[contains(concat(" ",normalize-space(@class)," ")," header ")]');
+    $found_title = $query[0]->getText();
+    $this->assertEquals($found_title, $overview_title);
+    $this->assertNotEquals($found_title, $page_title);
 
     $this->drupalGet($orphan->toUrl()->toString());
-    $this->assertSession()->responseNotContains('<h1 class="header">' . $overview_title . '</h1>');
-    $this->assertSession()->responseContains('<h1 class="header">' . $orphan_title . '</h1>');
+    $query = $this->xpath('.//h1[contains(concat(" ",normalize-space(@class)," ")," header ")]');
+    $found_title = $query[0]->getText();
+    $this->assertNotEquals($found_title, $overview_title);
+    $this->assertEquals($found_title, $orphan_title);
 
     $new_overview_title = 'Guide overview - ' . $this->randomMachineName(8);
     $overview->set('title', $new_overview_title);
@@ -97,7 +103,9 @@ class PageHeaderBlockTest extends BrowserTestBase {
 
     $this->drupalGet($page->toUrl()->toString());
     $this->assertSession()->responseNotContains($overview_title);
-    $this->assertSession()->responseContains('<h1 class="header">' . $new_overview_title . '</h1>');
+    $query = $this->xpath('.//h1[contains(concat(" ",normalize-space(@class)," ")," header ")]');
+    $found_title = $query[0]->getText();
+    $this->assertEquals($found_title, $new_overview_title);
   }
 
 }
