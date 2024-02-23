@@ -20,12 +20,15 @@ class GuidesContentsBlock extends GuidesAbstractBaseBlock {
   public function build() {
     $this->setPages();
     $links = [];
+    $language = \Drupal::languageManager()->getCurrentLanguage();
 
     $options = $this->node->id() == $this->overview->id() ? ['attributes' => ['class' => 'active']] : [];
     $links[] = $this->overview->toLink($this->overview->localgov_guides_section_title->value, 'canonical', $options);
     foreach ($this->guidePages as $guide_node) {
       $options = $this->node->id() == $guide_node->id() ? ['attributes' => ['class' => 'active']] : [];
-      $links[] = $guide_node->toLink($guide_node->localgov_guides_section_title->value, 'canonical', $options);
+      $options['language'] = $language;
+      $guide_node_title = $guide_node->getTranslation($language->getID())->localgov_guides_section_title->value;
+      $links[] = $guide_node->toLink($guide_node_title, 'canonical', $options);
     }
 
     $build = [];

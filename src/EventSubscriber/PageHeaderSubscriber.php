@@ -39,6 +39,16 @@ class PageHeaderSubscriber implements EventSubscriberInterface {
     }
 
     $overview = $node->localgov_guides_parent->entity ?? NULL;
+    $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+
+    // If the overview is translated, use the translated version.
+    if ($node->localgov_guides_parent->entity->getTranslation($langcode) !== NULL) {
+      $overview = $node->localgov_guides_parent->entity->getTranslation($langcode);
+    }
+    else {
+      $overview = $node->localgov_guides_parent->entity;
+    }
+
     if (!empty($overview)) {
       $event->setTitle($overview->getTitle());
       if ($overview->get('body')->summary) {
