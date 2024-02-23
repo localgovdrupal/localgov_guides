@@ -109,17 +109,33 @@ abstract class GuidesAbstractBaseBlock extends BlockBase implements ContainerFac
    */
   protected function setPages() {
     if (is_null($this->guidePages)) {
+      // Get the translation of the overview node.
+      $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
       if ($this->node->bundle() == 'localgov_guides_overview') {
-        $this->overview = $this->node;
+        // If the overview is translated, use the translated version.
+        if ($this->node->getTranslation($langcode) !== NULL) {
+          $this->overview = $this->node->getTranslation($langcode);
+        }
+        else {
+          $this->overview = $this->node;
+        }
       }
       else {
-        $this->overview = $this->node->localgov_guides_parent->entity;
+        // For all node types that are not 'localgov_guides_overview',
+        // if the node is translated, use the translated version.
+        if ($this->node->localgov_guides_parent->entity->getTranslation($langcode) !== NULL) {
+          $this->overview = $this->node->localgov_guides_parent->entity->getTranslation($langcode);
+        }
+        else {
+          $this->overview = $this->node->localgov_guides_parent->entity;
+        }
       }
 
       $this->guidePages = $this->overview->localgov_guides_pages->referencedEntities();
       $this->guidePages = array_filter($this->guidePages, function ($guide_node) {
         return ($guide_node instanceof NodeInterface) && $guide_node->access('view');
       });
+
       $this->guidePages = array_values($this->guidePages);
       $this->format = $this->overview->localgov_guides_list_format->value;
     }
