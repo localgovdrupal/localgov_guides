@@ -1,0 +1,6 @@
+localgov_guides.settings:
+  title: Localgov Guides Settings
+  description: Configure the localgov_guides module
+  parent: system.admin_config_system
+  route_name: localgov_guides.settings
+  weight: 10

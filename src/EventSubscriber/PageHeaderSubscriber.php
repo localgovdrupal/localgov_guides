@@ -15,6 +15,20 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class PageHeaderSubscriber implements EventSubscriberInterface {
 
   /**
+   * The config.factory service.
+   *
+   * @var Drupal\Core\Config\ImmutableConfig
+   */
+  protected $configFactory;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct($config_factory) {
+    $this->configFactory = $config_factory;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
@@ -39,19 +53,37 @@ class PageHeaderSubscriber implements EventSubscriberInterface {
     }
 
     $overview = $node->localgov_guides_parent->entity ?? NULL;
-    if (!empty($overview)) {
-      $event->setTitle($overview->getTitle());
-      if ($overview->get('body')->summary) {
-        $event->setLede([
-          '#type' => 'html_tag',
-          '#tag' => 'p',
-          '#value' => $overview->get('body')->summary,
-        ]);
+    if (!$this->configFactory->get('localgov_guides.settings')->get('modern_header')) {
+      // The legacy rendering uses overview content for Guide Page titles.
+      if (!empty($overview)) {
+        $event->setTitle($overview->getTitle());
+        if ($overview->get('body')->summary) {
+          $event->setLede([
+            '#type' => 'html_tag',
+            '#tag' => 'p',
+            '#value' => $overview->get('body')->summary,
+          ]);
+        }
+        $event->setCacheTags(Cache::mergeTags($node->getCacheTags(), $overview->getCacheTags()));
       }
-      $event->setCacheTags(Cache::mergeTags($node->getCacheTags(), $overview->getCacheTags()));
+      else {
+        $event->setLede('');
+      }
     }
     else {
-      $event->setLede('');
+      // The newer rendering uses the node's own content for Guide page titles.
+      $event->setTitle([
+        '#theme' => 'guides_page_header_title',
+        '#title' => $node->getTitle(),
+        '#node' => $node,
+        '#overview' => $overview,
+      ]);
+      $event->setLede([
+        '#theme' => 'guides_page_header_lede',
+        '#lede' => $overview->getTitle(),
+        '#node' => $node,
+        '#overview' => $overview,
+      ]);
     }
   }
 

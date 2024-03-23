@@ -22,6 +22,20 @@ function localgov_guides_theme($existing, $type, $theme, $path) {
         'format' => [],
       ],
     ],
+    'guides_page_header_title' => [
+      'variables' => [
+        'title' => NULL,
+        'overview' => NULL,
+        'node' => NULL,
+      ],
+    ],
+    'guides_page_header_lede' => [
+      'variables' => [
+        'lede' => NULL,
+        'overview' => NULL,
+        'node' => NULL,
+      ],
+    ],
     'guides_prev_next_block' => [
       'variables' => [
         'previous_url' => NULL,

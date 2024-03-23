@@ -1,0 +1,7 @@
+localgov_guides.settings:
+  path: '/admin/config/system/localgov_guides'
+  defaults:
+    _title: 'Localgov Guides Settings'
+    _form: 'Drupal\localgov_guides\Form\SettingsForm'
+  requirements:
+    _permission: 'administer site configuration'
