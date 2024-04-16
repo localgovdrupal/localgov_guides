@@ -98,7 +98,6 @@ abstract class GuidesAbstractBaseBlock extends BlockBase implements ContainerFac
   protected function setPages() {
     if (is_null($this->guidePages)) {
       // Get the translation of the overview node.
-      $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
       if ($this->node->bundle() == 'localgov_guides_overview') {
         $this->overview = $this->node;
       }
