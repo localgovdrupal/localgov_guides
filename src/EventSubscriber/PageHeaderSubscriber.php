@@ -5,7 +5,7 @@ namespace Drupal\localgov_guides\EventSubscriber;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\localgov_core\Event\PageHeaderDisplayEvent;
-use Drupal\node\Entity\Node;
+use Drupal\node\NodeInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -40,7 +40,7 @@ class PageHeaderSubscriber implements EventSubscriberInterface {
 
     $node = $event->getEntity();
 
-    if (!$node instanceof Node) {
+    if (!$node instanceof NodeInterface) {
       return;
     }
 
@@ -49,7 +49,7 @@ class PageHeaderSubscriber implements EventSubscriberInterface {
     }
 
     $overview = $node->localgov_guides_parent->entity ?? NULL;
-    if (!empty($overview)) {
+    if ($overview instanceof NodeInterface) {
       $overview = $this->entityRepository->getTranslationFromContext($overview);
       $event->setTitle($overview->getTitle());
       if ($overview->get('body')->summary) {
