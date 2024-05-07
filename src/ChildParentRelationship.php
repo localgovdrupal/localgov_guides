@@ -61,7 +61,7 @@ class ChildParentRelationship implements ContainerInjectionInterface {
       $node->localgov_guides_pages->appendItem(['target_id' => $missing]);
     }
     foreach ($extra_children as $extra) {
-      foreach (array_keys($node->localgov_guides_pages->getValue(), ['target_id' => $extra]) as $offset) {
+      foreach (array_keys($node->localgov_guides_pages->getValue(), ['target_id' => $extra], TRUE) as $offset) {
         $node->localgov_guides_pages->offsetUnset($offset);
       }
     }
@@ -84,7 +84,7 @@ class ChildParentRelationship implements ContainerInjectionInterface {
       if ($old_parent = $node->original->localgov_guides_parent->entity) {
         // Getting the old guide overview we look for all the references to this
         // page.
-        foreach (array_keys($old_parent->localgov_guides_pages->getValue(), ['target_id' => $node->id()]) as $offset) {
+        foreach (array_keys($old_parent->localgov_guides_pages->getValue(), ['target_id' => $node->id()], TRUE) as $offset) {
           // And remove each reference on the old parent to this page.
           $old_parent->localgov_guides_pages->offsetUnset($offset);
         }
@@ -93,7 +93,7 @@ class ChildParentRelationship implements ContainerInjectionInterface {
     }
     if ($parent = $node->localgov_guides_parent->entity) {
       // The current version of this page points to an overview.
-      if (array_search(['target_id' => $node->id()], $parent->localgov_guides_pages->getValue()) === FALSE) {
+      if (array_search(['target_id' => $node->id()], $parent->localgov_guides_pages->getValue(), TRUE) === FALSE) {
         // The overview does not yet point to this page, so we add it.
         $parent->localgov_guides_pages->appendItem(['target_id' => $node->id()]);
         $parent->save();
