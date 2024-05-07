@@ -6,6 +6,7 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Entity\EntityRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Routing\CurrentRouteMatch;
@@ -50,20 +51,6 @@ abstract class GuidesAbstractBaseBlock extends BlockBase implements ContainerFac
   protected $format = '';
 
   /**
-   * Entity manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
-   * Current route object.
-   *
-   * @var \Drupal\Core\Routing\ResettableStackedRouteMatchInterface
-   */
-  protected $routeMatch;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -72,7 +59,8 @@ abstract class GuidesAbstractBaseBlock extends BlockBase implements ContainerFac
       $plugin_id,
       $plugin_definition,
       $container->get('current_route_match'),
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('entity.repository')
     );
   }
 
@@ -85,16 +73,16 @@ abstract class GuidesAbstractBaseBlock extends BlockBase implements ContainerFac
    *   The plugin_id for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Routing\CurrentRouteMatch $route_match
+   * @param \Drupal\Core\Routing\CurrentRouteMatch $routeMatch
    *   The route match service.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The entity type manager service.
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
+   *   The entity repository.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, CurrentRouteMatch $route_match, EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, protected CurrentRouteMatch $routeMatch, protected EntityTypeManagerInterface $entityTypeManager, protected EntityRepositoryInterface $entityRepository) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->routeMatch = $route_match;
-    $this->entityTypeManager = $entity_type_manager;
     if ($this->routeMatch->getParameter('node')) {
       $this->node = $this->routeMatch->getParameter('node');
       if (!$this->node instanceof NodeInterface) {
@@ -116,7 +104,10 @@ abstract class GuidesAbstractBaseBlock extends BlockBase implements ContainerFac
         $this->overview = $this->node->localgov_guides_parent->entity;
       }
 
-      $this->guidePages = $this->overview->localgov_guides_pages->referencedEntities();
+      $this->overview = $this->entityRepository->getTranslationFromContext($this->overview);
+      foreach ($this->overview->localgov_guides_pages->referencedEntities() as $guide_page) {
+        $this->guidePages[] = $this->entityRepository->getTranslationFromContext($guide_page);
+      }
       $this->guidePages = array_filter($this->guidePages, function ($guide_node) {
         return ($guide_node instanceof NodeInterface) && $guide_node->access('view');
       });
