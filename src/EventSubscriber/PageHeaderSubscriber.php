@@ -16,20 +16,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class PageHeaderSubscriber implements EventSubscriberInterface {
 
   /**
-   * The entity repository service.
-   *
-   * @var \Drupal\Core\Entity\EntityRepositoryInterface
-   */
-  protected $entityRepository;
-
-  /**
    * PageHeaderSubscriber constructor.
    *
-   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entity_repository
+   * @param \Drupal\Core\Entity\EntityRepositoryInterface $entityRepository
    *   The entity repository.
    */
-  public function __construct(EntityRepositoryInterface $entity_repository) {
-    $this->entityRepository = $entity_repository;
+  public function __construct(protected EntityRepositoryInterface $entityRepository) {
   }
 
   /**
