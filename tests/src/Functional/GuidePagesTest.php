@@ -116,20 +116,20 @@ class GuidePagesTest extends BrowserTestBase {
     $guide_page_title_2 = 'Guide page - ' . $this->randomMachineName(8);
     $guide_overview_page = $this->createNode([
       'title' => $guide_overview_title,
-      'localgov_guides_section_title' => $guide_overview_title ,
+      'localgov_guides_section_title' => $guide_overview_title,
       'type' => 'localgov_guides_overview',
       'status' => NodeInterface::NOT_PUBLISHED,
     ]);
     $guide_page_1 = $this->createNode([
       'title' => $guide_page_title_1,
-      'localgov_guides_section_title' => $guide_page_title_1 ,
+      'localgov_guides_section_title' => $guide_page_title_1,
       'type' => 'localgov_guides_page',
       'status' => NodeInterface::NOT_PUBLISHED,
       'localgov_guides_parent' => ['target_id' => $guide_overview_page->id()],
     ]);
     $guide_page_2 = $this->createNode([
       'title' => $guide_page_title_2,
-      'localgov_guides_section_title' => $guide_page_title_2 ,
+      'localgov_guides_section_title' => $guide_page_title_2,
       'type' => 'localgov_guides_page',
       'status' => NodeInterface::NOT_PUBLISHED,
       'localgov_guides_parent' => ['target_id' => $guide_overview_page->id()],
@@ -174,6 +174,6 @@ class GuidePagesTest extends BrowserTestBase {
     $this->drupalGet($guide_page_2->toUrl()->toString());
     $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains($guide_page_title_2);
-
   }
+
 }
