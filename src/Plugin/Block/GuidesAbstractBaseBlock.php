@@ -97,6 +97,9 @@ abstract class GuidesAbstractBaseBlock extends BlockBase implements ContainerFac
    */
   protected function setPages() {
     if (is_null($this->guidePages)) {
+      // Initialise guidePages as an array.
+      $this->guidePages = [];
+
       if ($this->node->bundle() == 'localgov_guides_overview') {
         $this->overview = $this->node;
       }
