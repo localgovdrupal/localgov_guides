@@ -16,4 +16,5 @@ settings:
   label: 'Guides prev next block'
   provider: localgov_guides
   label_display: '0'
+  show_title: true
 visibility: {  }
