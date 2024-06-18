@@ -239,7 +239,7 @@ function localgov_guides_optional_fields_settings($services, $topics) {
             'placeholder' => '',
             'match_limit' => 10,
           ],
-          'weight' => 51,
+          'weight' => -1,
         ])->save();
       }
       if ($topics && !$form_display->getComponent('localgov_topics')) {
