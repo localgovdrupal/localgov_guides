@@ -134,7 +134,6 @@ class GuidePagesTest extends BrowserTestBase {
       'status' => NodeInterface::NOT_PUBLISHED,
       'localgov_guides_parent' => ['target_id' => $guide_overview_page->id()],
     ]);
-    $this->drupalLogout();
     $this->drupalGet($guide_overview_page->toUrl()->toString());
     $this->assertSession()->statusCodeEquals(403);
     $this->drupalGet($guide_page_1->toUrl()->toString());
