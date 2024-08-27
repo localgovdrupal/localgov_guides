@@ -8,7 +8,10 @@
 /**
  * Implements hook_install().
  */
-function localgov_guides_install() {
+function localgov_guides_install($is_syncing) {
+  if ($is_syncing) {
+    return;
+  }
   $services = \Drupal::moduleHandler()->moduleExists('localgov_services_navigation');
   $topics = \Drupal::moduleHandler()->moduleExists('localgov_topics');
   localgov_guides_optional_fields_settings($services, $topics);
