@@ -2,13 +2,13 @@
 
 namespace Drupal\Tests\localgov_guides\Functional;
 
-use Drupal\node\NodeInterface;
-use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\Tests\BrowserTestBase;
+use Drupal\Tests\Traits\Core\CronRunTrait;
 use Drupal\Tests\node\Traits\NodeCreationTrait;
 use Drupal\Tests\system\Functional\Menu\AssertBreadcrumbTrait;
 use Drupal\Tests\taxonomy\Traits\TaxonomyTestTrait;
-use Drupal\Tests\Traits\Core\CronRunTrait;
+use Drupal\node\NodeInterface;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Tests pages working together with pathauto, services and topics.
