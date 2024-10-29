@@ -2,7 +2,6 @@
 
 namespace Drupal\localgov_guides\Plugin\PreviewLinkAutopopulate;
 
-use Drupal\node\Entity\Node;
 use Drupal\node\NodeInterface;
 use Drupal\preview_link\PreviewLinkAutopopulatePluginBase;
 
@@ -39,7 +38,7 @@ class Guides extends PreviewLinkAutopopulatePluginBase {
       $overview = $node->get('localgov_guides_parent')->entity;
     }
 
-    if ($overview instanceof Node) {
+    if ($overview instanceof NodeInterface) {
       $guide_nodes[] = $overview;
 
       // Find guide pages.
