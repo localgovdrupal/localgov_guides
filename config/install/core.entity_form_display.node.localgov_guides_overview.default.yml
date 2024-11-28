@@ -3,6 +3,7 @@ status: true
 dependencies:
   config:
     - field.field.node.localgov_guides_overview.body
+    - field.field.node.localgov_guides_overview.localgov_guides_list_layout
     - field.field.node.localgov_guides_overview.localgov_guides_list_format
     - field.field.node.localgov_guides_overview.localgov_guides_pages
     - field.field.node.localgov_guides_overview.localgov_guides_section_title
@@ -35,6 +36,12 @@ content:
   localgov_guides_list_format:
     type: options_select
     weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  localgov_guides_list_layout:
+    type: options_select
+    weight: 4
     region: content
     settings: {  }
     third_party_settings: {  }

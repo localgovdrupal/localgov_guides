@@ -20,9 +20,17 @@ class GuidesContentsBlock extends GuidesAbstractBaseBlock {
   public function build() {
     $this->setPages();
     $links = [];
+    $layout_type = FALSE;
+    $layout_type_field = $this->overview->get('localgov_guides_list_layout');
+
+    if (!empty($layout_type_field) && isset($layout_type_field->getValue()[0])) {
+      $layout_type = $layout_type_field->getValue()[0]['value'];
+      $layout_type = str_replace('_', '-', $layout_type);
+    }
 
     $options = $this->node->id() == $this->overview->id() ? ['attributes' => ['class' => 'active']] : [];
     $links[] = $this->overview->toLink($this->overview->localgov_guides_section_title->value, 'canonical', $options);
+
     foreach ($this->guidePages as $guide_node) {
       $options = $this->node->id() == $guide_node->id() ? ['attributes' => ['class' => 'active']] : [];
       $links[] = $guide_node->toLink($guide_node->localgov_guides_section_title->value, 'canonical', $options);
@@ -34,6 +42,10 @@ class GuidesContentsBlock extends GuidesAbstractBaseBlock {
       '#links' => $links,
       '#format' => $this->format,
     ];
+
+    if ($layout_type) {
+      $build['#attributes']['class'][] = 'block-localgov-guides-contents--' . $layout_type;
+    }
 
     return $build;
   }
