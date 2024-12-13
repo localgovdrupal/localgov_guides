@@ -21,11 +21,13 @@ class GuidesContentsBlock extends GuidesAbstractBaseBlock {
     $this->setPages();
     $links = [];
     $layout_type = FALSE;
-    $layout_type_field = $this->overview->get('localgov_guides_list_layout');
 
-    if (!empty($layout_type_field) && isset($layout_type_field->getValue()[0])) {
-      $layout_type = $layout_type_field->getValue()[0]['value'];
-      $layout_type = str_replace('_', '-', $layout_type);
+    if ($this->overview->hasField('localgov_guides_list_layout')) {
+      $layout_type_field = $this->overview->get('localgov_guides_list_layout');
+      if (!empty($layout_type_field) && isset($layout_type_field->getValue()[0])) {
+        $layout_type = $layout_type_field->getValue()[0]['value'];
+        $layout_type = str_replace('_', '-', $layout_type);
+      }
     }
 
     $options = $this->node->id() == $this->overview->id() ? ['attributes' => ['class' => 'active']] : [];
