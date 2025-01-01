@@ -7,7 +7,7 @@
     "minimum-stability": "dev",
     "require": {
         "drupal/core": "^10.2 || ^11.0",
-        "localgovdrupal/localgov_core": "dev-fix/2.x/246-drupal-11-support as 2.13.11"
+        "localgovdrupal/localgov_core": "^2.12"
     },
     "require-dev": {
         "localgovdrupal/localgov_services": "^2.1",
