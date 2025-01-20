@@ -208,7 +208,7 @@ function localgov_guides_preprocess_node__localgov_guides_overview__full(&$vars)
 
   if ($guide_overview_node->hasField('localgov_guides_section_title') && !$guide_overview_node->localgov_guides_section_title->isEmpty()) {
     $guide_overview_title = $guide_overview_node->localgov_guides_section_title->value;
-  };
+  }
 
   $vars['guide_overview_title'] = $guide_overview_title ?: $guide_overview_default_title;
 }
