@@ -52,7 +52,7 @@ class PageHeaderSubscriber implements EventSubscriberInterface {
     if ($overview instanceof NodeInterface) {
       $overview = $this->entityRepository->getTranslationFromContext($overview);
       $event->setTitle($overview->getTitle());
-      if ($overview->get('body')->summary) {
+      if ($overview->hasField('body') && $overview->get('body')->summary) {
         $event->setLede([
           '#type' => 'html_tag',
           '#tag' => 'p',
