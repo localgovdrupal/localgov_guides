@@ -63,6 +63,10 @@ class PageHeaderBlockTest extends BrowserTestBase {
       'title' => $overview_title,
       'type' => 'localgov_guides_overview',
       'status' => NodeInterface::PUBLISHED,
+      'body' => [
+        'summary' => 'Lede to show',
+        'value' => '',
+      ],
     ]);
 
     $page_title = 'Guide page - ' . $this->randomMachineName(8);
@@ -84,6 +88,7 @@ class PageHeaderBlockTest extends BrowserTestBase {
     $query = $this->xpath('.//h1[contains(concat(" ",normalize-space(@class)," ")," header ")]');
     $found_title = $query[0]->getText();
     $this->assertEquals($found_title, $overview_title);
+    $this->assertSession()->responseContains('Lede to show');
 
     $this->drupalGet($page->toUrl()->toString());
     $query = $this->xpath('.//h1[contains(concat(" ",normalize-space(@class)," ")," header ")]');
@@ -103,6 +108,23 @@ class PageHeaderBlockTest extends BrowserTestBase {
 
     $this->drupalGet($page->toUrl()->toString());
     $this->assertSession()->responseNotContains($overview_title);
+    $query = $this->xpath('.//h1[contains(concat(" ",normalize-space(@class)," ")," header ")]');
+    $found_title = $query[0]->getText();
+    $this->assertEquals($found_title, $new_overview_title);
+
+    // Check lede.
+    $this->drupalGet($page->toUrl()->toString());
+    $this->assertSession()->responseContains('Lede to show');
+    // Remove body field, check title and no lede.
+    $field_definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions('node', 'localgov_guides_overview');
+    $field_definitions['body']->delete();
+    $this->drupalGet($overview->toUrl()->toString());
+    $this->assertSession()->responseNotContains('Lede to show');
+    // @todo remove this.
+    drupal_flush_all_caches();
+    // @todo end.
+    $this->drupalGet($page->toUrl()->toString());
+    $this->assertSession()->responseNotContains('Lede to show');
     $query = $this->xpath('.//h1[contains(concat(" ",normalize-space(@class)," ")," header ")]');
     $found_title = $query[0]->getText();
     $this->assertEquals($found_title, $new_overview_title);
