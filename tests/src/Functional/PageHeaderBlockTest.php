@@ -121,8 +121,8 @@ class PageHeaderBlockTest extends BrowserTestBase {
     $this->drupalGet($overview->toUrl()->toString());
     $this->assertSession()->responseNotContains('Lede to show');
     // @todo remove this.
+    // Issue https://github.com/localgovdrupal/localgov_core/issues/290
     drupal_flush_all_caches();
-    // @todo end.
     $this->drupalGet($page->toUrl()->toString());
     $this->assertSession()->responseNotContains('Lede to show');
     $query = $this->xpath('.//h1[contains(concat(" ",normalize-space(@class)," ")," header ")]');
