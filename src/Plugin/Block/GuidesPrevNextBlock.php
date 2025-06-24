@@ -74,7 +74,7 @@ class GuidesPrevNextBlock extends GuidesAbstractBaseBlock {
   /**
    * {@inheritdoc}
    */
-  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     parent::blockSubmit($form, $form_state);
 
     $values = $form_state->getValues();
