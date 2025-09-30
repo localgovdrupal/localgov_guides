@@ -89,6 +89,100 @@ class ContentsBlockTest extends BrowserTestBase {
   }
 
   /**
+   * Test unpublished guide page links in contents block.
+   */
+  public function testUnpublishedGuidePageLinks() {
+    // Create a guide overview.
+    $overview = $this->createNode([
+      'title' => 'Guide overview',
+      'type' => 'localgov_guides_overview',
+      'status' => NodeInterface::PUBLISHED,
+    ]);
+
+    // Create published guide pages.
+    $published_page = $this->createNode([
+      'title' => 'Published guide page',
+      'type' => 'localgov_guides_page',
+      'status' => NodeInterface::PUBLISHED,
+      'localgov_guides_parent' => ['target_id' => $overview->id()],
+    ]);
+
+    // Create unpublished guide page.
+    $unpublished_page = $this->createNode([
+      'title' => 'Unpublished guide page',
+      'type' => 'localgov_guides_page',
+      'status' => NodeInterface::NOT_PUBLISHED,
+      'localgov_guides_parent' => ['target_id' => $overview->id()],
+    ]);
+
+    // Test as anonymous user - unpublished pages should not appear.
+    $this->drupalGet($overview->toUrl()->toString());
+    $this->assertSession()->responseContains('Published guide page');
+    $this->assertSession()->responseNotContains('Unpublished guide page');
+
+    // Verify no data-drupal-is-unpublished attribute for anonymous users.
+    $this->assertSession()->elementNotExists('css', '[data-drupal-is-unpublished]');
+
+    // Test as authenticated user with content access permissions.
+    $content_admin = $this->drupalCreateUser([
+      'bypass node access',
+      'access content',
+    ]);
+    $this->drupalLogin($content_admin);
+
+    // Check overview page - both published and unpublished should appear.
+    $this->drupalGet($overview->toUrl()->toString());
+    $this->assertSession()->responseContains('Published guide page');
+    $this->assertSession()->responseContains('Unpublished guide page');
+
+    // Verify unpublished page has data-drupal-is-unpublished attribute.
+    $this->assertSession()->elementExists('css', '[data-drupal-is-unpublished]');
+
+    // Verify published page does not have the unpublished attribute.
+    $published_link_xpath = '//a[contains(text(), "Published guide page")]/ancestor::li';
+    $published_elements = $this->xpath($published_link_xpath);
+    $this->assertCount(1, $published_elements);
+    $this->assertFalse($published_elements[0]->hasAttribute('data-drupal-is-unpublished'));
+
+    // Verify unpublished page has the unpublished attribute.
+    $unpublished_link_xpath = '//li[@data-drupal-is-unpublished]';
+    $unpublished_elements = $this->xpath($unpublished_link_xpath);
+    $this->assertCount(1, $unpublished_elements);
+    $this->assertStringContainsString('Unpublished guide page', $unpublished_elements[0]->getText());
+
+    // Test from a guide page view.
+    $this->drupalGet($published_page->toUrl()->toString());
+    $this->assertSession()->responseContains('Guide overview');
+    $this->assertSession()->responseContains('Published guide page');
+    $this->assertSession()->responseContains('Unpublished guide page');
+
+    // Verify unpublished attribute is present when viewing from guide page.
+    $this->assertSession()->elementExists('css', '[data-drupal-is-unpublished]');
+
+    // Test visibility changes when publishing status changes.
+    $this->drupalLogout();
+
+    // Publish the previously unpublished page.
+    $unpublished_page->status = NodeInterface::PUBLISHED;
+    $unpublished_page->save();
+
+    // Check as anonymous user - should now see the page without unpublished attribute.
+    $this->drupalGet($overview->toUrl()->toString());
+    $this->assertSession()->responseContains('Published guide page');
+    $this->assertSession()->responseContains('Unpublished guide page');
+    $this->assertSession()->elementNotExists('css', '[data-drupal-is-unpublished]');
+
+    // Unpublish the previously published page.
+    $published_page->status = NodeInterface::NOT_PUBLISHED;
+    $published_page->save();
+
+    // Check as anonymous user - should not see the unpublished page.
+    $this->drupalGet($overview->toUrl()->toString());
+    $this->assertSession()->responseNotContains('Published guide page');
+    $this->assertSession()->responseContains('Unpublished guide page');
+  }
+
+  /**
    * Test the contents list block.
    */
   public function testContentListBlock() {
