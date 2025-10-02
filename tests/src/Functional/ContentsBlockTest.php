@@ -286,7 +286,8 @@ class ContentsBlockTest extends BrowserTestBase {
     $unpublished_page->status = NodeInterface::PUBLISHED;
     $unpublished_page->save();
 
-    // Check as anonymous user - should now see the page without unpublished attribute.
+    // Check as anonymous user - should now see the page without
+    // unpublished attribute.
     $this->drupalGet($overview->toUrl()->toString());
     $this->assertSession()->responseContains('Published guide page');
     $this->assertSession()->responseContains('Unpublished guide page');
