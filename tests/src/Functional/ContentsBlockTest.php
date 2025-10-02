@@ -211,7 +211,7 @@ class ContentsBlockTest extends BrowserTestBase {
   /**
    * Test unpublished guide page links in contents block.
    */
-  public function testUnpublishedGuidePageLinks() {
+  public function testUnpublishedGuidePageLinks(): void {
     // Create a guide overview.
     $overview = $this->createNode([
       'title' => 'Guide overview',
