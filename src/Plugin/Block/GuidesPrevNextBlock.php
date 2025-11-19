@@ -37,7 +37,11 @@ class GuidesPrevNextBlock extends GuidesAbstractBaseBlock {
       }
       else {
         $previous_url = $this->overview->toUrl();
-        $previous_title = $this->overview->localgov_guides_section_title->value;
+        $previous_title = $this->overview->title->value;
+        // If the overview has a section title, use that instead of the title.
+        if (!$this->overview->localgov_guides_section_title->isEmpty()) {
+          $previous_title = $this->overview->localgov_guides_section_title->value;
+        }
       }
       if (!empty($this->guidePages[$page_delta + 1])) {
         $next_url = $this->guidePages[$page_delta + 1]->toUrl();
