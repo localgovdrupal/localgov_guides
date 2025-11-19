@@ -74,7 +74,7 @@ class GuidePagesTest extends BrowserTestBase {
   /**
    * Verifies basic functionality with all modules.
    */
-  public function testConfigForm() {
+  public function testConfigForm(): void {
     $this->drupalLogin($this->adminUser);
     $this->drupalGet('/admin/structure/types/manage/localgov_guides_overview/fields');
     $this->assertSession()->pageTextContains('Guide pages');
@@ -88,7 +88,7 @@ class GuidePagesTest extends BrowserTestBase {
   /**
    * Test adding unpublished guide pages via /node/add form.
    */
-  public function testUnpublishedGuidePages() {
+  public function testUnpublishedGuidePages(): void {
     $guide_overview_title = 'Guide overview - ' . $this->randomMachineName(8);
     $guide_summary_text = 'Aenean semper sodales augue. In volutpat quam id nisi accumsan scelerisque. Phasellus et dignissim arcu. Quisque vulputate ligula ac mauris consectetur bibendum. Phasellus ultrices velit ultrices efficitur sodales.';
     $guide_body_text = 'Vestibulum scelerisque viverra diam in cursus. Donec interdum eget tellus sed volutpat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec tempus at neque vitae tempor. Aenean tristique elit id ultrices ornare. Morbi a mauris magna. Ut diam dui, venenatis non purus in, tincidunt aliquet diam. Maecenas a mattis sapien. Duis ultricies lacinia tortor, et interdum ante rhoncus id. Ut ultrices leo et dui aliquam placerat. Nullam egestas eros a lectus venenatis, vel mattis dolor consectetur. Sed ac mattis purus. Duis vulputate nisi nisl, a varius ligula accumsan non. Praesent sed ipsum nunc. Cras tincidunt, metus in commodo pulvinar, tortor nisi consequat est, ac porttitor orci eros id sem. Suspendisse rutrum risus arcu, quis placerat dolor pulvinar quis.';
@@ -178,7 +178,7 @@ class GuidePagesTest extends BrowserTestBase {
   /**
    * Test with and without section title.
    */
-  public function testSectionTitleGuidePages() {
+  public function testSectionTitleGuidePages(): void {
     $guide_overview_title = 'Guide overview - ' . $this->randomMachineName(8);
     $guide_page_title_1 = 'Guide page - ' . $this->randomMachineName(8);
     $guide_overview_page = $this->createNode([
