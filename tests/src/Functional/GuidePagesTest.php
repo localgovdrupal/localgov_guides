@@ -175,4 +175,37 @@ class GuidePagesTest extends BrowserTestBase {
     $this->assertSession()->pageTextContains($guide_page_title_2);
   }
 
+  /**
+   * Test with and without section title.
+   */
+  public function testSectionTitleGuidePages() {
+    $guide_overview_title = 'Guide overview - ' . $this->randomMachineName(8);
+    $guide_body_text = 'Vestibulum scelerisque viverra diam in cursus. Donec interdum eget tellus sed volutpat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec tempus at neque vitae tempor. Aenean tristique elit id ultrices ornare. Morbi a mauris magna. Ut diam dui, venenatis non purus in, tincidunt aliquet diam. Maecenas a mattis sapien. Duis ultricies lacinia tortor, et interdum ante rhoncus id. Ut ultrices leo et dui aliquam placerat. Nullam egestas eros a lectus venenatis, vel mattis dolor consectetur. Sed ac mattis purus. Duis vulputate nisi nisl, a varius ligula accumsan non. Praesent sed ipsum nunc. Cras tincidunt, metus in commodo pulvinar, tortor nisi consequat est, ac porttitor orci eros id sem. Suspendisse rutrum risus arcu, quis placerat dolor pulvinar quis.';
+
+    $guide_page_title_1 = 'Guide page - ' . $this->randomMachineName(8);
+    $guide_overview_page = $this->createNode([
+      'title' => $guide_overview_title,
+      'type' => 'localgov_guides_overview',
+      'status' => NodeInterface::PUBLISHED,
+    ]);
+    $guide_page_1 = $this->createNode([
+      'title' => $guide_page_title_1,
+      'type' => 'localgov_guides_page',
+      'status' => NodeInterface::PUBLISHED,
+      'localgov_guides_parent' => ['target_id' => $guide_overview_page->id()],
+    ]);
+    $this->drupalGet($guide_overview_page->toUrl()->toString());
+    $this->assertSession()->statusCodeEquals(200);
+    $this->drupalGet($guide_page_1->toUrl()->toString());
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains($guide_overview_title);
+
+    $guide_summary_text = 'Aenean semper sodales augue. In volutpat quam id nisi accumsan scelerisque. Phasellus et dignissim arcu. Quisque vulputate ligula ac mauris consectetur bibendum. Phasellus ultrices velit ultrices efficitur sodales.';
+    $guide_overview_page->set('localgov_guides_section_title', $guide_summary_text);
+    $guide_overview_page->save();
+    $this->drupalGet($guide_page_1->toUrl()->toString());
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains($guide_summary_text);
+  }
+
 }
